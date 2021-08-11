@@ -1,0 +1,7 @@
+  M1:
+  - ADQS_TEST_START
+  
+  M1_BATLOW:
+  - ADQS_TEST_END
+  M1_ERROR:
+  - ADQS_TEST_END

@@ -1,0 +1,9 @@
+sequences:
+  GOTO_TEST:
+    - GOTO 1 0 0
+    - GOTO 1 2 0
+    - GOTO -1 0 0
+  GOTO_TEST2:
+    - GOTO 3 0 0
+    - GOTO -3 0 0
+    - GOTO 2 2 3.14

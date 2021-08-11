@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>rb_theron_perception</name>
+  <version>0.0.0</version>
+  <description>The rb_theron_perception package for configuration files</description>
+
+  <maintainer email="avillena@robotnik.es">Álvaro Villena</maintainer>
+
+  <license>BSD</license>
+
+  <buildtool_depend>catkin</buildtool_depend>
+  <exec_depend>laser_filters</exec_depend>
+  <exec_depend>robotnik_locator</exec_depend>
+  <exec_depend>robotnik_pose_filter</exec_depend>
+</package>

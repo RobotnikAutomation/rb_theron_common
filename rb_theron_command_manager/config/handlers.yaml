@@ -1,0 +1,80 @@
+command_handlers:
+  #- GOTO
+  #- MOVE
+  #- TURN
+  - DOCK
+  - RLC_GOTO
+  - RLC_MOVE
+  - RLC_TURN
+  - RLC_CHARGE
+  - RLC_UNCHARGE
+  #- RLC_PICK
+  #- RLC_PLACE
+  - WAIT
+  - RLC_GOTO_TAG
+  #- GOTO_TAG_STRAIGHT
+
+
+# ACTIONS
+
+GOTO:
+  type: move_base_action_interface/MoveBaseActionInterface
+  namespace: move_base
+  frame_id: robot_map
+
+MOVE:
+  type: move_action_interface/MoveActionInterface
+  namespace: move
+
+TURN:
+  type: move_action_interface/TurnActionInterface
+  namespace: move
+
+DOCK:
+  type: dock_action_interface/DockActionInterface
+  namespace: pp_docker
+
+WAIT:
+  type: wait_action_interface/WaitActionInterface
+  namespace: any
+
+# PROCEDURES
+
+RLC_GOTO:
+  type: goto_procedure_interface/GoToProcedureInterface
+  namespace: GoToComponent
+  frame_id: robot_map
+
+RLC_MOVE:
+  type: move_linear_procedure_interface/MoveLinearProcedureInterface
+  namespace: MoveComponent
+
+RLC_TURN:
+  type: move_angular_procedure_interface/MoveAngularProcedureInterface
+  namespace: MoveComponent
+
+RLC_CHARGE:
+  type: charge_procedure_interface/ChargeProcedureInterface
+  namespace: ChargeComponent
+
+RLC_UNCHARGE:
+  type: uncharge_procedure_interface/UnchargeProcedureInterface
+  namespace: UnchargeComponent
+
+RLC_PICK:
+  type: pick_procedure_interface/PickProcedureInterface
+  namespace: PickComponent
+
+RLC_PLACE:
+  type: place_procedure_interface/PlaceProcedureInterface
+  namespace: PlaceComponent
+
+RLC_GOTO_TAG:
+  type: goto_tag_procedure_interface/GoToTagProcedureInterface
+  namespace: GoToComponent
+  get_poi_ns: poi_manager/get_poi_params
+
+GOTO_TAG_STRAIGHT:
+  type: goto_tag_procedure_interface/GoToTagProcedureInterface
+  namespace: GoToStraightComponent
+  get_poi_ns: poi_manager/get_poi_params

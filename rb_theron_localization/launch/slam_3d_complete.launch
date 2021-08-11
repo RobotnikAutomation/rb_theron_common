@@ -1,0 +1,73 @@
+<?xml version="1.0"?>
+<launch>
+
+    <arg name="id_robot" default="$(optenv ROBOT_ID robot)"/>
+    <arg name="prefix" value="$(arg id_robot)_" if="$(eval id_robot != '')" />
+    <arg name="prefix" value="" unless="$(eval id_robot != '')" />
+
+    <!-- overall namespace -->
+    <!--arg name="mapping_ns" default="mapping_3d" /-->
+    <arg name="mapping_ns" default="" />
+
+    <!-- which nodes to run -->
+    <arg name="registration" default="true" />
+    <arg name="odometry" default="true" />
+    <arg name="mapping" default="true" />
+    <arg name="visualization" default="false" />
+
+    <!-- which frames to use -->
+    <arg name="base_frame" default="$(arg prefix)base_link" />
+    <arg name="odom_frame" default="$(arg prefix)odom" />
+    <arg name="mapped_odom_frame" default="$(arg prefix)mapped_odom" />
+    <arg name="map_frame" default="$(arg prefix)map" />
+
+    <!-- aloam nodes have been modified to look for parameters in the tree
+        so defining them here is sufficient to pass the values.
+        However in this demo, they are set in both sides just to show -->
+    <param name="base_frame" value="$(arg base_frame)" />
+    <param name="odom_frame" value="$(arg odom_frame)" />
+    <param name="mapped_odom_frame" value="$(arg mapped_odom_frame)" />
+    <param name="map_frame" value="$(arg map_frame)" />
+
+    <!-- input topics -->
+    <arg name="points_topic" default="points" />
+
+    <!-- other parameters -->
+    <arg name="broadcast_tf" default="true" />
+
+    <group ns="$(arg mapping_ns)">
+        <include if="$(arg registration)" file="$(find localization_3d)/launch/aloam/rslidar_16_aloam_registration.launch">
+            <arg name="id_robot" value="$(arg id_robot)"/>
+            <arg name="prefix" value="$(arg prefix)" />
+            <arg name="base_frame" value="$(arg base_frame)" />
+            <arg name="points_topic" default="$(arg points_topic)" />
+        </include>
+
+        <include if="$(arg odometry)" file="$(find localization_3d)/launch/aloam/rslidar_16_aloam_odometry.launch">
+            <arg name="id_robot" value="$(arg id_robot)"/>
+            <arg name="prefix" value="$(arg prefix)" />
+            <arg name="base_frame" value="$(arg base_frame)" />
+            <arg name="odom_frame" value="$(arg odom_frame)" />
+
+            <arg name="broadcast_tf" value="$(arg broadcast_tf)" />
+        </include>
+
+        <include if="$(arg mapping)" file="$(find localization_3d)/launch/aloam/rslidar_16_aloam_mapping.launch">
+            <arg name="id_robot" value="$(arg id_robot)"/>
+            <arg name="prefix" value="$(arg prefix)" />
+            <arg name="base_frame" value="$(arg base_frame)" />
+            <arg name="odom_frame" value="$(arg odom_frame)" />
+            <arg name="mapped_odom_frame" value="$(arg mapped_odom_frame)" />
+            <arg name="map_frame" value="$(arg map_frame)" />
+
+            <arg name="broadcast_tf" value="$(arg broadcast_tf)" />
+        </include>
+
+        <include if="$(arg visualization)" file="$(find localization_3d)/launch/visualization.launch">
+            <arg name="id_robot" value="$(arg id_robot)"/>
+            <arg name="prefix" value="$(arg prefix)" />
+            <arg name="config_file" default="rslidar_16_aloam.rviz" />
+        </include>
+    </group>
+
+</launch>

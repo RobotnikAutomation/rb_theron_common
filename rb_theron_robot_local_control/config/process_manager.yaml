@@ -1,0 +1,4 @@
+type: robot_local_control_components/ProcessManagerComponent
+desired_freq: 5.0
+
+rosmon_nodes: [rosmon_bringup, rosmon_map_nav, rosmon_hmi, rosmon_rosbag_manager, rosmon_command_manager, rosmon_velocity_limiter]

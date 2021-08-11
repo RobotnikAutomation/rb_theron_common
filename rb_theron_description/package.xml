@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>rb_theron_description</name>
+  <version>0.0.0</version>
+  <description>The rb_theron_description package</description>
+
+  <maintainer email="robert@todo.todo">robert</maintainer>
+
+  <license>TODO</license>
+
+  <buildtool_depend>catkin</buildtool_depend>
+  <depend>joint_state_publisher</depend>
+  <depend>robot_state_publisher</depend>
+  <depend>robotnik_sensors</depend>
+  <depend>rviz</depend>
+  <depend>urdf</depend>
+  <depend>xacro</depend>
+
+</package>
