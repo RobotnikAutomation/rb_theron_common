@@ -21,7 +21,7 @@
 -->
 
 <launch>
-  <arg name="urdf_filename" default="$(find rb_theron_description)/robots/versions/rb_theron.urdf"/>
+  <arg name="urdf_filename" default="$(find rb_theron_description)/robots/rb_theron.urdf"/>
   <arg name="bag_filenames" default=""/>
 
   <node name="cartographer_assets_writer" pkg="cartographer_ros" required="true"

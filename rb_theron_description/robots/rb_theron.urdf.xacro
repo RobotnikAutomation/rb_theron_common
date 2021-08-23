@@ -86,7 +86,7 @@
 
 
 	<!-- SENSORS -->
-	<!-- TODO: Should be intel_t265, but we still don't have this model -->
+	<!-- TODO: Should be intel_t265 -->
 	<!-- TODO: Moved 0.01 in x, otherwise the camera is still inside the robot -->
 	<xacro:sensor_r430 prefix="$(arg prefix)front_realsense_camera" parent="$(arg prefix)base_link" prefix_topic="front_realsense_camera">
 		<origin xyz="0.3305 0.0 0.1468" rpy="0 0 0"/>

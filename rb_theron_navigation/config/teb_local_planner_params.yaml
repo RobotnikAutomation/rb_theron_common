@@ -31,7 +31,7 @@ TebLocalPlannerROS:
   wheelbase: 0.0
   cmd_angle_instead_rotvel: false
   footprint_model: # types: "point", "circular", "two_circles", "line", "polygon"
-    type: "line" # Let's try to use polygon. We will change to other type if needed
+    type: "line" # Let's use line to avoid CPU overhead
     # radius: 0.3 # for type "circular"
     line_start: [-0.2, 0.0] # for type "line"
     line_end: [0.2, 0.0] # for type "line"
@@ -39,18 +39,17 @@ TebLocalPlannerROS:
     #front_radius: 0.2 # for type "two_circles"
     #rear_offset: 0.2 # for type "two_circles"
     #rear_radius: 0.2 # for type "two_circles"
-    #vertices: [ [0.25, -0.05], [0.18, -0.05], [0.18, -0.18], [-0.19, -0.18], [-0.25, 0], [-0.19, 0.18], [0.18, 0.18], [0.18, 0.05], [0.25, 0.05] ] # for type "polygon"
-    # vertices: [[0.140, 0.148], [-0.250, 0.148], [-0.250, -0.148], [0.140, -0.148]]
+    #vertices: [[0.140, 0.148], [-0.250, 0.148], [-0.250, -0.148], [0.140, -0.148]] # for type "polygon"
 
   # GoalTolerance
 
-  xy_goal_tolerance: 0.05
-  yaw_goal_tolerance: 0.0175
+  xy_goal_tolerance: 0.1
+  yaw_goal_tolerance: 0.03
   free_goal_vel: False
 
   # Obstacles
 
-  min_obstacle_dist: 0.317 # 0.3762 for line (-0.057, -0.057)
+  min_obstacle_dist: 0.317 # inflation over footprint_model. Should cover complete robot
   inflation_dist: 0.33 # greater than min_obstacle_dist to take effect
   include_costmap_obstacles: True
   costmap_obstacles_behind_robot_dist: 1.0
@@ -78,7 +77,7 @@ TebLocalPlannerROS:
   weight_max_vel_theta: 1
   weight_acc_lim_x: 1
   weight_acc_lim_theta: 1
-  weight_kinematics_nh: 7000
+  weight_kinematics_nh: 10000
   weight_kinematics_forward_drive: 1000
   weight_kinematics_turning_radius: 1
   weight_optimaltime: 10
@@ -106,4 +105,3 @@ TebLocalPlannerROS:
   obstacle_keypoint_offset: 0.1
   obstacle_heading_threshold: 0.45
   visualize_hc_graph: False
-

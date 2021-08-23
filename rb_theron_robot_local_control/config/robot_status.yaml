@@ -15,20 +15,15 @@ battery:
   charging_threshold: 56.5  # Ask for the real threshold
 
 sensors:
-  lidar_3d:
-    type: robot_local_control_components/Lidar3dComponent
-    desired_freq: 1.0
-    topic: lidar_3d/points
   imu:
     type: robot_local_control_components/ImuComponent
     desired_freq: 1.0
     topic: imu/data
+  front_laser:
+    type: robot_local_control_components/LaserComponent
+    desired_freq: 1.0
+    topic: front_laser/scan
   front_rgbd_camera:
     type: robot_local_control_components/CameraComponent
     desired_freq: 1.0
-    topic: front_rgbd_camera/color/image_raw
-  rear_rgbd_camera:
-    type: robot_local_control_components/CameraComponent
-    desired_freq: 1.0
-    topic: rear_rgbd_camera/color/image_raw
-
+    topic: front_rgbd_camera/rgb/image_raw
