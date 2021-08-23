@@ -38,8 +38,8 @@ recovery_behaviors:
 
 conservative_reset:
   reset_distance: 10.0
-  layer_names: [obstacle_layer, 3d_lidar_obstacle_layer, rgbd_laserscan_obstacle_layer]
+  layer_names: [obstacle_layer]
 
 aggresive_reset:
   reset_distance: 0.0
-  layer_names: [obstacle_layer, 3d_lidar_obstacle_layer, rgbd_laserscan_obstacle_layer]
+  layer_names: [obstacle_layer]
