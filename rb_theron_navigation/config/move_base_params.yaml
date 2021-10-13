@@ -2,7 +2,7 @@ base_global_planner: global_planner/GlobalPlanner
 
 #max_planning_retries: 10   #How many times to allow for planning retries before executing recovery behaviors. A value of -1.0 corresponds to an infinite retries.
 
-controller_frequency: 5.0        
+controller_frequency: 5.0
 controller_patience: 15.0         # How long the controller will wait in seconds
                                   # without receiving a valid control before space-clearing
                                   # operations are performed
@@ -38,8 +38,8 @@ recovery_behaviors:
 
 conservative_reset:
   reset_distance: 10.0
-  layer_names: [obstacle_layer, 3d_lidar_obstacle_layer, rgbd_laserscan_obstacle_layer]
+  layer_names: [obstacle_layer, rgbd_laserscan_obstacle_layer]
 
 aggresive_reset:
   reset_distance: 0.0
-  layer_names: [obstacle_layer, 3d_lidar_obstacle_layer, rgbd_laserscan_obstacle_layer]
+  layer_names: [obstacle_layer, rgbd_laserscan_obstacle_layer]

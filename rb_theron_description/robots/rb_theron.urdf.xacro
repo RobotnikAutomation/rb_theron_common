@@ -19,7 +19,7 @@
 	<xacro:include filename="$(find rb_theron_description)/urdf/wheels/castor.urdf.xacro" />
 
 	<!-- Import rocker bogie -->
-	<xacro:include filename="$(find rb_theron_description)/urdf/rocker/mcq_prototype_rocker.urdf.xacro" />
+	<xacro:include filename="$(find rb_theron_description)/urdf/rocker/rb_theron_rocker.urdf.xacro" />
 
 	<!-- Import all available sensors -->
 	<xacro:include filename="$(find robotnik_sensors)/urdf/all_sensors.urdf.xacro" />

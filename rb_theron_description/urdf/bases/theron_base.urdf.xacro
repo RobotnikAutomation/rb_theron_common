@@ -76,7 +76,7 @@
         <origin xyz="0 0 0" rpy="0 0 0" />
         <xacro:if value="${hq}">
           <geometry>
-            <mesh filename="package://rb_theron_description/meshes/bases/mcq_prototype_bottom_cover.dae"/>
+            <mesh filename="package://rb_theron_description/meshes/bases/rb_theron_bottom_cover.dae"/>
           </geometry>
         </xacro:if>
         <xacro:unless value="${hq}">
@@ -91,7 +91,7 @@
       <collision>
         <origin xyz="0 0 0" rpy="0 0 0 " />
         <geometry>
-          <mesh filename="package://rb_theron_description/meshes/bases/mcq_prototype_bottom_cover.dae"/>
+          <mesh filename="package://rb_theron_description/meshes/bases/rb_theron_bottom_cover.dae"/>
         </geometry>
       </collision>
     </link> -->

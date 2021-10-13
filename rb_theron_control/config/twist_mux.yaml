@@ -4,11 +4,7 @@ topics:
   timeout : 0.5
   priority: 10
 - name    : move_base
-  topic   : mb_avoidance/move_base/cmd_vel
-  timeout : 0.5
-  priority: 2
-- name    : move_base_straight
-  topic   : mb_straight/move_base/cmd_vel
+  topic   : move_base/cmd_vel
   timeout : 0.5
   priority: 2
 - name    : docker

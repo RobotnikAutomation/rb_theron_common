@@ -40,14 +40,14 @@
       <visual>
         <origin xyz="0 0 0" rpy="0 0 0" />
           <geometry>     
-	       <mesh filename="package://rb_theron_description/meshes/wheels/mcq_prototype_base_castor.dae" />
+	       <mesh filename="package://rb_theron_description/meshes/wheels/rb_theron_base_castor.dae" />
           </geometry>         
       </visual>
 
       <collision>
         <origin xyz="0 0 0" rpy="0 0 0" />
           <geometry>     
-	       <mesh filename="package://rb_theron_description/meshes/wheels/mcq_prototype_base_castor.dae" />
+	       <mesh filename="package://rb_theron_description/meshes/wheels/rb_theron_base_castor.dae" />
           </geometry> 
       </collision>    
       <inertial>
@@ -80,7 +80,7 @@
      <!-- xacro:if value="${hq}">
           <origin xyz="0 0 0" rpy="0 0 0" />
           <geometry>     
-		<mesh filename="package://rb_theron_description/meshes/wheels/mcq_prototype_castor_wheel.dae" />
+		<mesh filename="package://rb_theron_description/meshes/wheels/rb_theron_castor_wheel.dae" />
           </geometry>         
         </xacro:if -->	 
        <!-- LOW RESOLUTION WHEELS -->
@@ -97,7 +97,7 @@
 	  <origin xyz="0 0 0" rpy="${M_PI/2} 0 0" />
 	  <!-- origin xyz="0 0 0" rpy="0 0 0" / -->
         <geometry>
-		  <!-- mesh filename="package://rb_theron_description/meshes/wheels/mcq_prototype_castor_wheel.dae" / -->
+		  <!-- mesh filename="package://rb_theron_description/meshes/wheels/rb_theron_castor_wheel.dae" / -->
           <cylinder length="${caster_height}" radius="${caster_radius}" />
           <!-- sphere radius="${caster_radius}"/ -->
         </geometry>

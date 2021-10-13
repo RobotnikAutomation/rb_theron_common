@@ -8,10 +8,8 @@ safety_laser_mode_allowed: safe
 charge_disable_procedures: true
 uncharge_procedure_name: UnchargeComponent
 
-#components: [GoToComponent, ChargeComponent, UnchargeComponent, MoveComponent]
 components:
  - GoToComponent
- - GoToStraightComponent
  - MoveComponent
  - ChargeComponent
  - UnchargeComponent
@@ -19,7 +17,7 @@ components:
 GoToComponent:
   type: robot_local_control_procedures/GoToMoveBase
   desired_freq: 5.0
-  action_namespace: mb_avoidance/move_base
+  action_namespace: move_base
   global_frame: robot_map
   base_frame: robot_base_footprint
   default_yaw_tolerance: 0.05 # when goal has orientation. if orientation is invalid, goal tolerance is changed to 3.14
@@ -29,20 +27,6 @@ GoToComponent:
   preemptable: false
   clear_costmaps_before_send_goal: false
   local_planner_namespace: TebLocalPlannerROS
-
-GoToStraightComponent:
-  type: robot_local_control_procedures/GoToMoveBase
-  desired_freq: 5.0
-  action_namespace: mb_straight/move_base
-  global_frame: robot_map
-  base_frame: robot_base_footprint
-  default_yaw_tolerance: 0.05 # when goal has orientation. if orientation is invalid, goal tolerance is changed to 3.14
-  has_safety_laser: false
-  yaw_tolerance: 0.05
-  xy_tolerance: 0.05
-  preemptable: false
-  clear_costmaps_before_send_goal: false
-  local_planner_namespace: PurePursuitPlanner
 
 MoveComponent:
   type: robot_local_control_procedures/Move

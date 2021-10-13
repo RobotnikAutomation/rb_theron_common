@@ -1,9 +1,0 @@
-publish_frequency: 2.0
-transform_tolerance: 2.0
-
-footprint: [[0.35, 0.28], [-0.35, 0.28], [-0.35, -0.28], [0.35, -0.28]]
-
-inflation_layer:
-  inflation_radius: 0.1
-  cost_scaling_factor: 0.2
-  transform_tolerance: 0.5

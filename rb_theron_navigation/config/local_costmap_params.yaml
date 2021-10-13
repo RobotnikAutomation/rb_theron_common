@@ -25,11 +25,5 @@ local_costmap:
       name: rgbd_laserscan_obstacle_layer
       type: "costmap_2d::ObstacleLayer"
     -
-      name: 3d_lidar_obstacle_layer
-      type: "spatio_temporal_voxel_layer/SpatioTemporalVoxelLayer"
-    #-
-    #  name: rgbd_obstacle_layer
-    #  type: "spatio_temporal_voxel_layer/SpatioTemporalVoxelLayer"
-    -
       name: inflation_layer
       type: "costmap_2d::InflationLayer"
