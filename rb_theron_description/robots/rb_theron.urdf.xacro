@@ -34,18 +34,9 @@
 	<xacro:property name="PI" value="3.1415926535897931"/>
 
 	<!-- Wheel parameters -->
-	<!-- x,y,z in translation from base_link to the center of the wheel -->
-	<xacro:property name="rocker_offset_x" value="0.1175" />
-	<xacro:property name="rocker_offset_y" value="0.1725" />
-	<xacro:property name="rocker_offset_z" value="0.0428" />
-
-	<!-- Castor paramters -->
-	<xacro:property name="caster_offset_x" value="-0.235" />
-	<xacro:property name="caster_offset_y" value="0.1725" />
-	<xacro:property name="caster_offset_z" value="0.0428" />
-
-
-	<xacro:property name="wheel_offset_z" value="0.015" />
+	<xacro:property name="wheel_offset_x" value="0" />
+	<xacro:property name="wheel_offset_y" value="0.2545" />
+	<xacro:property name="wheel_offset_z" value="0.0428" />
 
 	<!-- Flag to select the high or low quality model -->
 	<xacro:property name="hq" value="true" />
@@ -68,21 +59,12 @@
 	<xacro:gazebo_colors prefix="$(arg prefix)"/>
 
 	<!-- WHEELS -->
-	<xacro:rocker prefix="$(arg prefix)right" parent="$(arg prefix)base_link" reflect="true" hq="${hq}">
-		<origin xyz="${rocker_offset_x} -${rocker_offset_y} ${rocker_offset_z}" rpy="0 0 0"/>
-	</xacro:rocker>
-
-	<xacro:rocker prefix="$(arg prefix)left" parent="$(arg prefix)base_link" reflect="false" hq="${hq}">
-		<origin xyz="${rocker_offset_x} ${rocker_offset_y} ${rocker_offset_z}" rpy="0 0 0"/>
-	</xacro:rocker>
-
-	<xacro:caster prefix="$(arg prefix)left" parent="$(arg prefix)base_link" hq="${hq}">
-		<origin xyz="${caster_offset_x} ${caster_offset_y} ${caster_offset_z}" rpy="0 0 0"/>
-	</xacro:caster>
-
-	<xacro:caster prefix="$(arg prefix)right" parent="$(arg prefix)base_link" hq="${hq}">
-		<origin xyz="${caster_offset_x} ${-caster_offset_y} ${caster_offset_z}" rpy="0 0 0"/>
-	</xacro:caster>
+	<xacro:rubber_wheel prefix="$(arg prefix)right" parent="$(arg prefix)base_link" hq="${hq}">
+		<origin xyz="${wheel_offset_x} ${-wheel_offset_y} ${wheel_offset_z}" rpy="0 0 0"/>
+	</xacro:rubber_wheel>
+	<xacro:rubber_wheel prefix="$(arg prefix)left" parent="$(arg prefix)base_link" hq="${hq}">
+		<origin xyz="${wheel_offset_x} ${wheel_offset_y} ${wheel_offset_z}" rpy="0 0 0"/>
+	</xacro:rubber_wheel>
 
 
 	<!-- SENSORS -->
