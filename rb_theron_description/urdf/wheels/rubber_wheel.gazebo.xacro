@@ -39,7 +39,11 @@
 			<material>Gazebo/Yellow</material>
 			<turnGravityOff>false</turnGravityOff-->
 		</gazebo>
-		
+		<gazebo reference="${prefix}_wheel_tire_link">
+			<material>Gazebo/Gray</material>
+			<turnGravityOff>false</turnGravityOff>
+		</gazebo>
+
 		<!--gazebo reference="${name}_wheel_link">
 			<kp>500000.0</kp>
 			<kd>10.0</kd>
@@ -55,4 +59,3 @@
 	</xacro:macro>
 
 </robot>
-

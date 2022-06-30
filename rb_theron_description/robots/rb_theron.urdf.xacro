@@ -35,8 +35,8 @@
 
 	<!-- Wheel parameters -->
 	<xacro:property name="wheel_offset_x" value="0" />
-	<xacro:property name="wheel_offset_y" value="0.2545" />
-	<xacro:property name="wheel_offset_z" value="0.0428" />
+	<xacro:property name="wheel_offset_y" value="0.2516" />
+	<xacro:property name="wheel_offset_z" value="0.0" />
 
 	<!-- Flag to select the high or low quality model -->
 	<xacro:property name="hq" value="true" />
@@ -65,14 +65,20 @@
 	<xacro:rubber_wheel prefix="$(arg prefix)left" parent="$(arg prefix)base_link" hq="${hq}">
 		<origin xyz="${wheel_offset_x} ${wheel_offset_y} ${wheel_offset_z}" rpy="0 0 0"/>
 	</xacro:rubber_wheel>
+	<xacro:caster prefix="$(arg prefix)front_left" parent="$(arg prefix)base_link" hq="${hq}">
+		<origin xyz="0.235 0.1825 0.046" rpy="0 0 0"/>
+	</xacro:caster>
+	<xacro:caster prefix="$(arg prefix)front_right" parent="$(arg prefix)base_link" hq="${hq}">
+		<origin xyz="0.235 -0.1825 0.046" rpy="0 0 0"/>
+	</xacro:caster>
+	<xacro:caster prefix="$(arg prefix)rear_left" parent="$(arg prefix)base_link" hq="${hq}">
+		<origin xyz="-0.235 0.1825 0.046" rpy="0 0 0"/>
+	</xacro:caster>
+	<xacro:caster prefix="$(arg prefix)rear_right" parent="$(arg prefix)base_link" hq="${hq}">
+		<origin xyz="-0.235 -0.1825 0.046" rpy="0 0 0"/>
+	</xacro:caster>
 
 
-	<!-- SENSORS -->
-	<!-- TODO: Should be intel_t265 -->
-	<!-- TODO: Moved 0.01 in x, otherwise the camera is still inside the robot -->
-	<xacro:sensor_r430 prefix="$(arg prefix)front_realsense_camera" parent="$(arg prefix)base_link" prefix_topic="front_realsense_camera">
-		<origin xyz="0.3305 0.0 0.1468" rpy="0 0 0"/>
-	</xacro:sensor_r430>
 
   <!-- TODO: Moved 0.01 in x, otherwise the camera is still inside the robot -->
 	<xacro:sensor_orbbec_astra prefix="$(arg prefix)front_rgbd_camera" parent="$(arg prefix)base_link" prefix_topic="front_rgbd_camera">
