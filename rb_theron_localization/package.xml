@@ -32,7 +32,6 @@
   <run_depend>geometry_msgs</run_depend>
   <run_depend>gmapping</run_depend>
   <run_depend>imu_complementary_filter</run_depend>
-  <run_depend>localization_3d</run_depend>
   <run_depend>map_server</run_depend>
   <run_depend>mavros_msgs</run_depend>
   <run_depend>rb_theron_description</run_depend>
