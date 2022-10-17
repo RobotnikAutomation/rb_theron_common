@@ -43,6 +43,7 @@
 	<!-- *************** -->
 
 	<xacro:arg name="prefix" default="robot_"/>
+	<xacro:arg name="gpu" default="true"/>
 
 	<!-- Here we create the robot elements using the xacro:macros imported at the beggining of this file -->
 
@@ -68,10 +69,10 @@
 		<origin xyz="0.250 0.0 0.1643" rpy="0 3.1416 3.1416"/>
 	</xacro:sensor_sick_nanoscan3-->
 
-	<xacro:sensor_sick_tim571 prefix="$(arg prefix)front_laser" parent="$(arg prefix)base_link" prefix_topic="front_laser" min_angle="-2.0507619" max_angle="2.0507619">
+	<xacro:sensor_sick_tim571 prefix="$(arg prefix)front_laser" parent="$(arg prefix)base_link" prefix_topic="front_laser" min_angle="-2.0507619" max_angle="2.0507619" gpu="$(arg gpu)">
 		<origin xyz="0.2675 -0.215 0.1613" rpy="0 -3.1416 2.3562"/>
 	</xacro:sensor_sick_tim571>
-	<xacro:sensor_sick_tim571 prefix="$(arg prefix)rear_laser" parent="$(arg prefix)base_link" prefix_topic="rear_laser" min_angle="-2.0507619" max_angle="2.0507619">
+	<xacro:sensor_sick_tim571 prefix="$(arg prefix)rear_laser" parent="$(arg prefix)base_link" prefix_topic="rear_laser" min_angle="-2.0507619" max_angle="2.0507619" gpu="$(arg gpu)">
 		<origin xyz="-0.2675 0.215 0.1613" rpy="0 -3.1416 -0.7854"/>
 	</xacro:sensor_sick_tim571>
 
