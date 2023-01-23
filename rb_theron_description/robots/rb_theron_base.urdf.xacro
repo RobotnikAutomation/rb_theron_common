@@ -47,6 +47,7 @@
   	<xacro:rubber_wheel prefix="${prefix}left" parent="${prefix}base_link" hq="${hq}">
   		<origin xyz="${wheel_offset_x} ${wheel_offset_y} ${wheel_offset_z}" rpy="0 0 0"/>
   	</xacro:rubber_wheel>
+	
   	<xacro:caster prefix="${prefix}front_left" parent="${prefix}base_link" hq="${hq}">
   		<origin xyz="0.235 0.1825 0.046" rpy="0 0 0"/>
   	</xacro:caster>

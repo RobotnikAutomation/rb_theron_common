@@ -4,12 +4,12 @@
   <xacro:property name="M_PI" value="3.1415926535897931" />
 
   <!-- Caster support parameters -->
-  <property name="caster_support_mass" value="1.5" /> <!-- in kg-->
+  <xacro:property name="caster_support_mass" value="1.5" /> <!-- in kg-->
 
   <!-- Caster wheel parameters -->
-  <property name="caster_radius" value="0.050" />
-  <property name="caster_height" value="0.025" />
-  <property name="caster_mass" value="0.25" /> <!-- in kg-->
+  <xacro:property name="caster_radius" value="0.050" />
+  <xacro:property name="caster_height" value="0.025" />
+  <xacro:property name="caster_mass" value="0.25" /> <!-- in kg-->
 
   <!-- Caster wheel offset-->
   <xacro:property name="caster_wheel_offset_x" value="-0.033" />
@@ -53,7 +53,7 @@
       <inertial>
         <mass value="${caster_support_mass}" />
         <origin xyz="0 0 0" />
-        <cylinder_inertia  m="${caster_support_mass}" r="0.010" h="0.010" />  <!--Check these values -->
+        <xacro:cylinder_inertia  m="${caster_support_mass}" r="0.010" h="0.010" />  <!--Check these values -->
       </inertial>
     </link>
 
@@ -109,7 +109,7 @@
       <inertial>
         <mass value="${caster_mass}" />
         <origin xyz="0 0 0" />
-        <cylinder_inertia  m="${caster_mass}" r="${caster_radius}" h="${caster_height}" />
+        <xacro:cylinder_inertia  m="${caster_mass}" r="${caster_radius}" h="${caster_height}" />
       </inertial>
     </link>
 
