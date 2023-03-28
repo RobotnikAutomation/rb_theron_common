@@ -29,7 +29,7 @@
   <joint name="${prefix}joint_support" type="continuous">
       <parent link="${parent}"/>
       <child link="${prefix}support"/>
-      <insert_block name="origin" />
+      <xacro:insert_block name="origin" />
       <axis xyz="0 0 1" rpy="0 ${M_PI} 0" />
       <limit effort="100" velocity="100"/>
       <!-- joint_properties damping="1.5" friction="1.5"/ -->
@@ -68,7 +68,7 @@
      <joint name="${prefix}joint_wheel" type="continuous">
        <parent link="${parent}"/>
        <child link="${prefix}wheel"/>
-       <insert_block name="origin" />
+       <xacro:insert_block name="origin" />
        <axis xyz="0 1 0" rpy="0 0 0" />
        <limit effort="100" velocity="100"/>
        <joint_properties damping="0.1" friction="0.1"/>
