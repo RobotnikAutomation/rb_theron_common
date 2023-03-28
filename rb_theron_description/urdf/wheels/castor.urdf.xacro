@@ -40,14 +40,14 @@
       <visual>
         <origin xyz="0 0 0" rpy="0 0 0" />
           <geometry>
-	       <mesh filename="package://rb_theron_description/meshes/wheels/castor_wheel.stl" />
+         <mesh filename="package://rb_theron_description/meshes/wheels/castor_wheel.stl" />
           </geometry>
       </visual>
 
       <!--collision>
         <origin xyz="0 0 0" rpy="0 0 0" />
           <geometry>
-	       <mesh filename="package://rb_theron_description/meshes/wheels/castor_wheel.dae" />
+         <mesh filename="package://rb_theron_description/meshes/wheels/castor_wheel.dae" />
           </geometry>
       </collision-->
       <inertial>
@@ -60,7 +60,7 @@
   <!--CASTER WHEEL -->
   <!-- xacro:caster_wheel prefix="${prefix}" parent="${prefix}support" hq="${hq}" -->
   <xacro:caster_wheel prefix="${prefix}" parent="${prefix}support" hq="${hq}">
-		<origin xyz="${caster_wheel_offset_x} ${caster_wheel_offset_y} ${caster_wheel_offset_z}" rpy="0 0 0"/>
+    <origin xyz="${caster_wheel_offset_x} ${caster_wheel_offset_y} ${caster_wheel_offset_z}" rpy="0 0 0"/>
    </xacro:caster_wheel>
  </xacro:macro>
 
@@ -80,7 +80,7 @@
      <!-- xacro:if value="${hq}">
           <origin xyz="0 0 0" rpy="0 0 0" />
           <geometry>
-		<mesh filename="package://rb_theron_description/meshes/wheels/mcq_prototype_castor_wheel.dae" />
+    <mesh filename="package://rb_theron_description/meshes/wheels/mcq_prototype_castor_wheel.dae" />
           </geometry>
         </xacro:if -->
        <!-- LOW RESOLUTION WHEELS -->
@@ -94,16 +94,16 @@
       </visual>
 
      <collision>
-	  <origin xyz="0 0 0" rpy="${M_PI/2} 0 0" />
-	  <!-- origin xyz="0 0 0" rpy="0 0 0" / -->
+    <origin xyz="0 0 0" rpy="${M_PI/2} 0 0" />
+    <!-- origin xyz="0 0 0" rpy="0 0 0" / -->
         <geometry>
-		  <!-- mesh filename="package://rb_theron_description/meshes/wheels/mcq_prototype_castor_wheel.dae" / -->
+      <!-- mesh filename="package://rb_theron_description/meshes/wheels/mcq_prototype_castor_wheel.dae" / -->
           <cylinder length="${caster_height}" radius="${caster_radius}" />
           <!-- sphere radius="${caster_radius}"/ -->
         </geometry>
-		<surface>
+    <surface>
           <bounce restitution_coefficient = "1"/>
-		</surface>
+    </surface>
       </collision>
 
       <inertial>
@@ -121,7 +121,7 @@
       </joint>
       <actuator name="${prefix}support_joint_motor">
         <mechanicalReduction>1</mechanicalReduction>
-      	<motorTorqueConstant>1</motorTorqueConstant>
+        <motorTorqueConstant>1</motorTorqueConstant>
       </actuator>
     </transmission>
 
@@ -132,28 +132,28 @@
       </joint>
       <actuator name="${prefix}wheel_joint_motor">
         <mechanicalReduction>1</mechanicalReduction>
-		<motorTorqueConstant>1</motorTorqueConstant>
+    <motorTorqueConstant>1</motorTorqueConstant>
       </actuator>
     </transmission>
 
     <!-- gazebo reference="${prefix}support">
-			<mu1 value="5.0"/>
-			<mu2 value="0.5"/>
-			<kp value="10000000.0" />
-			<kd value="1.0" />
-			<fdir1 value="1 0 0"/>
+      <mu1 value="5.0"/>
+      <mu2 value="0.5"/>
+      <kp value="10000000.0" />
+      <kd value="1.0" />
+      <fdir1 value="1 0 0"/>
       <turnGravityOff>false</turnGravityOff>
     </gazebo -->
 
      <gazebo reference="${prefix}_wheel">
-			<mu1 value="100.0"/>
-			<mu2 value="100.0"/>
-			<!-- kp value="10000000.0" / -->
-			<kp value="100000.0" />
-			<kd value="100.0" />
-			<!-- fdir1 value="1 0 0"/ -->
-			<material>Gazebo/Black</material>
-			<turnGravityOff>false</turnGravityOff>
+      <mu1 value="100.0"/>
+      <mu2 value="100.0"/>
+      <!-- kp value="10000000.0" / -->
+      <kp value="100000.0" />
+      <kd value="100.0" />
+      <!-- fdir1 value="1 0 0"/ -->
+      <material>Gazebo/Black</material>
+      <turnGravityOff>false</turnGravityOff>
     </gazebo>
 
  </xacro:macro>
