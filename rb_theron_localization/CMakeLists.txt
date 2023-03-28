@@ -1,50 +1,16 @@
-cmake_minimum_required(VERSION 2.8.3)
+cmake_minimum_required(VERSION 3.5)
 project(rb_theron_localization)
 
-find_package(catkin REQUIRED COMPONENTS
-    amcl
-        geometry_msgs
-        gmapping
-        imu_complementary_filter
-        map_server
-        mavros_msgs
-        message_filters
-        robot_localization
-        robotnik_msgs
-        roscpp
-        rospy
-        std_msgs
-        std_srvs
-        tf
-        tf2
-        tf2_geometry_msgs
-        tf2_ros
-)
-
-catkin_package(
-    CATKIN_DEPENDS
-    geometry_msgs
-        mavros_msgs
-        message_filters
-        robot_localization
-        robotnik_msgs
-        roscpp
-        rospy
-        std_msgs
-        std_srvs
-        tf
-        tf2
-        tf2_geometry_msgs
-        tf2_ros
-)
+find_package(ament_cmake REQUIRED)
 
 install(
-  DIRECTORY launch
-        DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
+  DIRECTORY launch maps
+  DESTINATION share/${PROJECT_NAME}
 )
-
 install(
-  DIRECTORY maps
-        DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
+  PROGRAMS scripts/amcl_resample.py
+  DESTINATION lib/${PROJECT_NAME}
 )
 
+ament_export_dependencies(${THIS_PACKAGE_INCLUDE_DEPENDS})
+ament_package()
