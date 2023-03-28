@@ -22,15 +22,9 @@
 
   <buildtool_depend>ament_cmake</buildtool_depend>
 
+  <exec_depend>nav2_bt_navigator</exec_depend>
   <exec_depend>laser_filters</exec_depend>
-  <exec_depend>move_base</exec_depend>
   <exec_depend>pointcloud_to_laserscan</exec_depend>
-  <exec_depend>robotnik_docker</exec_depend>
-  <exec_depend>robotnik_move</exec_depend>
-  <exec_depend>robotnik_safety_controller</exec_depend>
-  <exec_depend>spatio_temporal_voxel_layer</exec_depend>
-  <exec_depend>teb_local_planner</exec_depend>
-  <exec_depend>global_planner</exec_depend>
   <export>
     <build_type>ament_cmake</build_type>
   </export>

@@ -23,6 +23,8 @@
   <exec_depend>joint_state_controller</exec_depend>
 
   <exec_depend>twist_mux</exec_depend>
+  <exec_depend>controller_manager</exec_depend>
+  <exec_depend>joint_state_broadcaster</exec_depend>
   <export>
     <build_type>ament_cmake</build_type>
   </export>
