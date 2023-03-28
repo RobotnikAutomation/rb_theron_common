@@ -1,15 +1,12 @@
-cmake_minimum_required(VERSION 2.8.3)
+cmake_minimum_required(VERSION 3.5)
 project(rb_theron_control)
 
-find_package(catkin REQUIRED COMPONENTS
-   controller_manager
-   twist_mux
-   
-)
-
-catkin_package()
+find_package(ament_cmake REQUIRED)
 
 install(
   DIRECTORY launch config
-        DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
+  DESTINATION share/${PROJECT_NAME}
 )
+
+ament_export_dependencies(${THIS_PACKAGE_INCLUDE_DEPENDS})
+ament_package()

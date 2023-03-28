@@ -1,19 +1,28 @@
 <?xml version="1.0"?>
-<package>
+<?xml-model
+    href="http://download.ros.org/schema/package_format3.xsd"
+    schematypens="http://www.w3.org/2001/XMLSchema"?>
+<package format="3">
   <name>rb_theron_control</name>
-  <version>0.0.0</version>
-  <description>The rb_theron_control package</description>
+  <version>1.0.0</version>
+  <description>
+    The rb_theron_control package.
+  </description>
+
   <maintainer email="avillena@robotnik.es">Álvaro Villena</maintainer>
 
   <license>BSD</license>
 
-  <buildtool_depend>catkin</buildtool_depend>
-  <build_depend>controller_manager</build_depend>
+  <url type="website">http://wiki.ros.org/rb_theron_common</url>
+  <url type="repository">https://github.com/RobotnikAutomation/rb_theron_common.git</url>
+  <url type="bugtracker">https://github.com/RobotnikAutomation/rb_theron_common/issues</url>
 
-  <build_depend>twist_mux</build_depend>
-  <run_depend>controller_manager</run_depend>
-  <run_depend>joint_state_controller</run_depend>
+  <buildtool_depend>ament_cmake</buildtool_depend>
 
-  <run_depend>twist_mux</run_depend>
-
+  <exec_depend>twist_mux</exec_depend>
+  <exec_depend>controller_manager</exec_depend>
+  <exec_depend>joint_state_broadcaster</exec_depend>
+  <export>
+    <build_type>ament_cmake</build_type>
+  </export>
 </package>
