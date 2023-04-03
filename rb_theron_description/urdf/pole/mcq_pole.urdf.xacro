@@ -25,7 +25,7 @@
       <visual>
         <origin xyz="0 0 0" rpy="0 0 0" />
           <geometry>
-            <mesh filename="package://rb_theron_description/meshes/pole/mcq_pole.stl"/>
+            <mesh filename="file://$(find rb_theron_description)/meshes/pole/mcq_pole.stl"/>
           </geometry>
         <material name="darkgrey">
           <color rgba="0.1 0.1 0.1 1"/>
@@ -34,7 +34,7 @@
       <collision>
         <origin xyz="0 0 0" rpy="0 0 0 " />
         <geometry>
-          <mesh filename="package://rb_theron_description/meshes/pole/mcq_pole.stl"/>
+          <mesh filename="file://$(find rb_theron_description)/meshes/pole/mcq_pole.stl"/>
         </geometry>
       </collision>
     </link>
