@@ -26,7 +26,7 @@
   <xacro:property name="hq" value="true" />
 
   <xacro:arg name="robot_id" default="robot"/>
-  <xacro:arg name="robot_id" default="$(arg robot_id)"/>
+	<xacro:arg name="gpu" default="true"/>
 
 
   <!-- *************** -->
@@ -67,12 +67,15 @@
     <origin xyz="-0.1975 0.0 0.1598" rpy="0 0 0"/>
   </xacro:sensor_imu_hector>
 
-  <xacro:sensor_sick_tim571 ns="$(arg robot_ns)" prefix="front_laser" parent="base_link">
+  <xacro:sensor_sick_tim571 ns="$(arg robot_ns)" prefix="front_laser" parent="base_link" gpu="$(arg gpu)">
     <origin xyz="0.2675 -0.215 0.1613" rpy="0 -3.1416 2.3562"/>
   </xacro:sensor_sick_tim571>
-  <xacro:sensor_sick_tim571 ns="$(arg robot_ns)" prefix="rear_laser" parent="base_link">
+  <xacro:sensor_sick_tim571 ns="$(arg robot_ns)" prefix="rear_laser" parent="base_link" gpu="$(arg gpu)">
     <origin xyz="-0.2675 0.215 0.1613" rpy="0 -3.1416 -0.7854"/>
   </xacro:sensor_sick_tim571>
+  <xacro:sensor_velodyne_vlp16 ns="$(arg robot_ns)" prefix="top_laser_" parent="base_link" gpu="$(arg gpu)">
+    <origin xyz="0 0 0.3" rpy="0 0 0"/>
+  </xacro:sensor_velodyne_vlp16>
 
   <!-- Gazebo ros control plugins -->
   <xacro:arg name="config_controllers" default=""/>
