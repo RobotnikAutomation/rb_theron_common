@@ -4,12 +4,8 @@ project(rb_theron_localization)
 find_package(ament_cmake REQUIRED)
 
 install(
-  DIRECTORY launch maps
+  DIRECTORY launch maps config
   DESTINATION share/${PROJECT_NAME}
-)
-install(
-  PROGRAMS scripts/amcl_resample.py
-  DESTINATION lib/${PROJECT_NAME}
 )
 
 ament_export_dependencies(${THIS_PACKAGE_INCLUDE_DEPENDS})
