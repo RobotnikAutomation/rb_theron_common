@@ -30,71 +30,41 @@ from ament_index_python.packages import get_package_share_directory
 
 from robotnik_common.launch import RewrittenYaml
 
-#from launch import LaunchDescription
-#from launch.actions import DeclareLaunchArgument
-#from launch.substitutions import LaunchConfiguration
-#from launch_ros.actions import Node
-#from ament_index_python.packages import get_package_share_directory
+def read_params(ld : launch.LaunchDescription, params : list[tuple[str, str, str]]): # name, description, default_value
 
-
-def read_params(ld : launch.LaunchDescription):
-  environment = launch.substitutions.LaunchConfiguration('environment')
-  use_sim_time = launch.substitutions.LaunchConfiguration('use_sim_time')
-  robot_id = launch.substitutions.LaunchConfiguration('robot_id')
-  slam_params_file = launch.substitutions.LaunchConfiguration('slam_params_file')
-
+  # Declare the launch options
   ld.add_action(launch.actions.DeclareLaunchArgument(
     name='environment',
     description='Read parameters from environment variables',
     choices=['true', 'false'],
     default_value='true',
   ))
+  for param in params:
+    ld.add_action(launch.actions.DeclareLaunchArgument(
+      name=param[0], description=param[1], default_value=param[2],))
 
-  ld.add_action(launch.actions.DeclareLaunchArgument(
-    name='use_sim_time',
-    description='Use simulation/Gazebo clock',
-    choices=['true', 'false'],
-    default_value='true',
-  ))
-
-  ld.add_action(launch.actions.DeclareLaunchArgument(
-    name='robot_id',
-    description='Name of the robot',
-    default_value='robot',
-  ))
-
-  ld.add_action(launch.actions.DeclareLaunchArgument(
-    name='slam_params_file',
-    description='Full path to the ROS2 parameters file to use for the slam_toolbox node',
-    default_value=os.path.join(get_package_share_directory("rb_theron_localization"), "config", "slam_params.yaml"),
-  ))
-
-  ret = {}
-
-  if environment == 'false':
-    ret = {
-      'use_sim_time': use_sim_time,
-      'slam_params_file': slam_params_file,
-    }
+  # Get the launch configuration variables
+  ret={}
+  if launch.substitutions.LaunchConfiguration('environment') == 'false':
+    for param in params:
+      ret[param[0]] = launch.substitutions.LaunchConfiguration(param[0])
   else:
-    if 'USE_SIM_TIME' in os.environ:
-      ret['use_sim_time'] = os.environ['USE_SIM_TIME']
-    else: ret['use_sim_time'] = use_sim_time
-
-    if 'ROBOT_ID' in os.environ:
-      ret['robot_id'] = os.environ['ROBOT_ID']
-    else: ret['robot_id'] = robot_id
-
-    if 'SLAM_PARAMS_FILE' in os.environ:
-      ret['slam_params_file'] = os.environ['SLAM_PARAMS_FILE']
-    else: ret['slam_params_file'] = slam_params_file
+    for param in params:
+      if str.upper(param[0]) in os.environ:
+        ret[param[0]] = launch.substitutions.EnvironmentVariable(str.upper(param[0]))
+      else: ret[param[0]] = launch.substitutions.LaunchConfiguration(param[0])
 
   return ret
 
 
 def generate_launch_description():
   ld = launch.LaunchDescription()
-  params = read_params(ld)
+  p = [
+    ('use_sim_time', 'Use simulation/Gazebo clock', 'true'),
+    ('robot_id', 'Name of the robot', 'robot'),
+    ('slam_params_file', 'Full path to the ROS2 parameters file to use for the slam_toolbox node', os.path.join(get_package_share_directory("rb_theron_localization"), "config", "slam_params.yaml")),
+  ]
+  params = read_params(ld, p)
 
   config_file = RewrittenYaml(
     source_file=params['slam_params_file'],

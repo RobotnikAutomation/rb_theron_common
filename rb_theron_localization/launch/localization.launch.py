@@ -30,169 +30,205 @@ from ament_index_python.packages import get_package_share_directory
 
 from robotnik_common.launch import RewrittenYaml
 
-def read_params(ld : launch.LaunchDescription):
-    environment = launch.substitutions.LaunchConfiguration('environment')
-    use_sim_time = launch.substitutions.LaunchConfiguration('use_sim_time')
-    namespace = launch.substitutions.LaunchConfiguration('namespace')
-    robot_id = launch.substitutions.LaunchConfiguration('robot_id')
-    map_name = launch.substitutions.LaunchConfiguration('map_name')
-    map_file_abs = launch.substitutions.LaunchConfiguration('map_file_abs')
-    amcl_file = launch.substitutions.LaunchConfiguration('amcl_file')
-    map_frame_id = launch.substitutions.LaunchConfiguration('map_frame_id')
+def read_params(ld : launch.LaunchDescription, params : list[tuple[str, str, str]]): # name, description, default_value
 
-    # Declare the launch options
+  # Declare the launch options
+  ld.add_action(launch.actions.DeclareLaunchArgument(
+    name='environment',
+    description='Read parameters from environment variables',
+    choices=['true', 'false'],
+    default_value='true',
+  ))
+  for param in params:
     ld.add_action(launch.actions.DeclareLaunchArgument(
-        name='environment',
-        description='Read params from environment variables.',
-        choices=['true', 'false'],
-        default_value='true')
-    )
+      name=param[0], description=param[1], default_value=param[2],))
 
-    ld.add_action(launch.actions.DeclareLaunchArgument(
-        name='use_sim_time',
-        description='Use simulation (Gazebo) clock if true',
-        choices=['true', 'false'],
-        default_value='true')
-    )
+  # Get the launch configuration variables
+  ret={}
+  if launch.substitutions.LaunchConfiguration('environment') == 'false':
+    for param in params:
+      ret[param[0]] = launch.substitutions.LaunchConfiguration(param[0])
+  else:
+    for param in params:
+      if str.upper(param[0]) in os.environ:
+        ret[param[0]] = launch.substitutions.EnvironmentVariable(str.upper(param[0]))
+      else: ret[param[0]] = launch.substitutions.LaunchConfiguration(param[0])
 
-    ld.add_action(launch.actions.DeclareLaunchArgument(
-        name='robot_id',
-        description='Frame id of the sensor. (e.g. robot).',
-        default_value='robot')
-    )
+  return ret
 
-    ld.add_action(launch.actions.DeclareLaunchArgument(
-        name='namespace',
-        description='Namespace of the nodes.',
-        default_value=robot_id)
-    )
-
-    ld.add_action(launch.actions.DeclareLaunchArgument(
-        name='map_name',
-        description='Name of the map file.',
-        default_value='opil_factory')
-    )
-
-    ld.add_action(launch.actions.DeclareLaunchArgument(
-        name='map_file_abs',
-        description='Absolute path to the map file.',
-        default_value=[get_package_share_directory('rb_theron_localization'), '/maps/', map_name, '/map.yaml'])
-    )
-
-    ld.add_action(launch.actions.DeclareLaunchArgument(
-        name='amcl_file',
-        description='Absolute path to the amcl file.',
-        default_value=[get_package_share_directory('rb_theron_localization'), '/config/amcl.yaml'])
-    )
-
-    ld.add_action(launch.actions.DeclareLaunchArgument(
-        name='map_frame_id',
-        description='Frame id of the map.',
-        default_value=['robot', '/map'])
-    )
-
-    # Parse the launch options
-    ret = {}
-
-    if environment == 'false':
-        ret = {
-        'use_sim_time': use_sim_time,
-        'namespace': namespace,
-        'robot_id': robot_id,
-        'map_file_abs': map_file_abs,
-        'amcl_file': amcl_file,
-        'map_frame_id': map_frame_id
-        }
-
-    else:
-        if 'USE_SIM_TIME' in os.environ:
-            ret['use_sim_time'] =  launch.substitutions.EnvironmentVariable('USE_SIM_TIME')
-        else: ret['use_sim_time'] = use_sim_time
-
-        if 'ROBOT_ID' in os.environ:
-            ret['robot_id'] = launch.substitutions.EnvironmentVariable('ROBOT_ID')
-        else: ret['robot_id'] = robot_id
-
-        if 'NAMESPACE' in os.environ:
-            ret['namespace'] = launch.substitutions.EnvironmentVariable('NAMESPACE')
-        elif 'ROBOT_ID' in os.environ:
-            ret['namespace'] = launch.substitutions.EnvironmentVariable('ROBOT_ID')
-        else:  ret['namespace'] = namespace
-
-        if 'MAP_FILE_ABS' in os.environ:
-            ret['map_file_abs'] = launch.substitutions.EnvironmentVariable('MAP_FILE_ABS')
-        if 'MAP_NAME' in os.environ:
-            ret['map_file_abs'] = [get_package_share_directory('rb_theron_localization'), '/maps/', launch.substitutions.EnvironmentVariable('MAP_NAME'), '/map.yaml']
-        else: ret['map_file_abs'] = map_file_abs
-
-        if 'AMCL_FILE' in os.environ:
-            ret['amcl_file'] = launch.substitutions.EnvironmentVariable('AMCL_FILE')
-        else: ret['amcl_file'] = amcl_file
-
-        if 'MAP_FRAME_ID' in os.environ:
-            ret['map_frame_id'] = launch.substitutions.EnvironmentVariable('MAP_FRAME_ID')
-        else: ret['map_frame_id'] = map_frame_id
-
-    return ret
-
-
+#def read_params(ld : launch.LaunchDescription):
+#    environment = launch.substitutions.LaunchConfiguration('environment')
+#    use_sim_time = launch.substitutions.LaunchConfiguration('use_sim_time')
+#    namespace = launch.substitutions.LaunchConfiguration('namespace')
+#    robot_id = launch.substitutions.LaunchConfiguration('robot_id')
+#    map_name = launch.substitutions.LaunchConfiguration('map_name')
+#    map_file_abs = launch.substitutions.LaunchConfiguration('map_file_abs')
+#    amcl_file = launch.substitutions.LaunchConfiguration('amcl_file')
+#    map_frame_id = launch.substitutions.LaunchConfiguration('map_frame_id')
+#
+#    # Declare the launch options
+#    ld.add_action(launch.actions.DeclareLaunchArgument(
+#        name='environment',
+#        description='Read params from environment variables.',
+#        choices=['true', 'false'],
+#        default_value='true')
+#    )
+#
+#    ld.add_action(launch.actions.DeclareLaunchArgument(
+#        name='use_sim_time',
+#        description='Use simulation (Gazebo) clock if true',
+#        choices=['true', 'false'],
+#        default_value='true')
+#    )
+#
+#    ld.add_action(launch.actions.DeclareLaunchArgument(
+#        name='robot_id',
+#        description='Frame id of the sensor. (e.g. robot).',
+#        default_value='robot')
+#    )
+#
+#    ld.add_action(launch.actions.DeclareLaunchArgument(
+#        name='namespace',
+#        description='Namespace of the nodes.',
+#        default_value=robot_id)
+#    )
+#
+#    ld.add_action(launch.actions.DeclareLaunchArgument(
+#        name='map_name',
+#        description='Name of the map file.',
+#        default_value='opil_factory')
+#    )
+#
+#    ld.add_action(launch.actions.DeclareLaunchArgument(
+#        name='map_file_abs',
+#        description='Absolute path to the map file.',
+#        default_value=[get_package_share_directory('rb_theron_localization'), '/maps/', map_name, '/map.yaml'])
+#    )
+#
+#    ld.add_action(launch.actions.DeclareLaunchArgument(
+#        name='amcl_file',
+#        description='Absolute path to the amcl file.',
+#        default_value=[get_package_share_directory('rb_theron_localization'), '/config/amcl.yaml'])
+#    )
+#
+#    ld.add_action(launch.actions.DeclareLaunchArgument(
+#        name='map_frame_id',
+#        description='Frame id of the map.',
+#        default_value=['robot', '/map'])
+#    )
+#
+#    # Parse the launch options
+#    ret = {}
+#
+#    if environment == 'false':
+#        ret = {
+#        'use_sim_time': use_sim_time,
+#        'namespace': namespace,
+#        'robot_id': robot_id,
+#        'map_file_abs': map_file_abs,
+#        'amcl_file': amcl_file,
+#        'map_frame_id': map_frame_id
+#        }
+#
+#    else:
+#        if 'USE_SIM_TIME' in os.environ:
+#            ret['use_sim_time'] =  launch.substitutions.EnvironmentVariable('USE_SIM_TIME')
+#        else: ret['use_sim_time'] = use_sim_time
+#
+#        if 'ROBOT_ID' in os.environ:
+#            ret['robot_id'] = launch.substitutions.EnvironmentVariable('ROBOT_ID')
+#        else: ret['robot_id'] = robot_id
+#
+#        if 'NAMESPACE' in os.environ:
+#            ret['namespace'] = launch.substitutions.EnvironmentVariable('NAMESPACE')
+#        elif 'ROBOT_ID' in os.environ:
+#            ret['namespace'] = launch.substitutions.EnvironmentVariable('ROBOT_ID')
+#        else:  ret['namespace'] = namespace
+#
+#        if 'MAP_FILE_ABS' in os.environ:
+#            ret['map_file_abs'] = launch.substitutions.EnvironmentVariable('MAP_FILE_ABS')
+#        if 'MAP_NAME' in os.environ:
+#            ret['map_file_abs'] = [get_package_share_directory('rb_theron_localization'), '/maps/', launch.substitutions.EnvironmentVariable('MAP_NAME'), '/map.yaml']
+#        else: ret['map_file_abs'] = map_file_abs
+#
+#        if 'AMCL_FILE' in os.environ:
+#            ret['amcl_file'] = launch.substitutions.EnvironmentVariable('AMCL_FILE')
+#        else: ret['amcl_file'] = amcl_file
+#
+#        if 'MAP_FRAME_ID' in os.environ:
+#            ret['map_frame_id'] = launch.substitutions.EnvironmentVariable('MAP_FRAME_ID')
+#        else: ret['map_frame_id'] = map_frame_id
+#
+#    return ret
+#
+#
 def generate_launch_description():
 
-    ld = launch.LaunchDescription()
-    params = read_params(ld)
+  ld = launch.LaunchDescription()
+  p = [
+    ('use_sim_time', 'Use simulation/Gazebo clock', 'true'),
+    ('robot_id', 'Frame id of the sensor', 'robot'),
+    ('namespace', 'Namespace of the nodes', launch.substitutions.LaunchConfiguration('robot_id')),
+    ('map_name', 'Name of the map file', 'opil_factory'),
+    ('map_file_abs', 'Absolute path to the map file', [get_package_share_directory('rb_theron_localization'), '/maps/', launch.substitutions.LaunchConfiguration('map_name'), '/map.yaml']),
+    ('amcl_file', 'Absolute path to the amcl file', [get_package_share_directory('rb_theron_localization'), '/config/amcl.yaml']),
+    ('map_frame_id', 'Frame id of the map', ['map']),
+  ]
+  params = read_params(ld, p)
 
-    lifecycle_nodes = ['amcl']
+  lifecycle_nodes = ['map_server', 'amcl']
 
-    amcl_rewritten = RewrittenYaml(
-        source_file=params['amcl_file'],
-        param_rewrites={
-            'use_sim_time': params['use_sim_time'],
-            'base_frame_id': [params['robot_id'], '/base_footprint'],
-            'odom_frame_id': [params['robot_id'], '/odom'],
-            'global_frame_id': params['map_frame_id'],
-        },
-        root_key=[params['namespace']],
-        convert_types=True,
-    )
+  amcl_rewritten = RewrittenYaml(
+      source_file=params['amcl_file'],
+      param_rewrites={
+          'use_sim_time': params['use_sim_time'],
+          'base_frame_id': [params['robot_id'], '/base_footprint'],
+          'global_frame_id': params['map_frame_id'],
+          'odom_frame_id': [params['robot_id'], '/odom'],
+          'scan_topic': ['laser/scan'],
+      },
+      root_key=[params['namespace']],
+      convert_types=True,
+  )
 
-    map_server = launch_ros.actions.Node(
-        package='nav2_map_server',
-        executable='map_server',
-        name='map_server',
-        parameters=[{
-            'use_sim_time': params['use_sim_time'],
-            'yaml_filename': params['map_file_abs'],
-            'topic_name': 'map',
-            'frame_id': params['map_frame_id'],
-        }],
-        output='screen')
+  map_server = launch_ros.actions.Node(
+      package='nav2_map_server',
+      executable='map_server',
+      name='map_server',
+      parameters=[{
+          'use_sim_time': params['use_sim_time'],
+          'yaml_filename': params['map_file_abs'],
+          'topic_name': '/map',
+          'frame_id': params['map_frame_id'],
+      }],
+      output='screen')
 
-    amcl_node = launch_ros.actions.Node(
-        package='nav2_amcl',
-        executable='amcl',
-        name='amcl',
-        parameters=[
-            {'use_sim_time': params['use_sim_time']},
-            amcl_rewritten
-        ],
-        remappings=[
-            ('map', '/robot/map'),
-        ],
-        output='screen')
+  amcl_node = launch_ros.actions.Node(
+      package='nav2_amcl',
+      executable='amcl',
+      name='amcl',
+      parameters=[
+          {'use_sim_time': params['use_sim_time']},
+          amcl_rewritten
+      ],
+      remappings=[
+          ('map', '/map'),
+      ],
+      output='screen')
 
-    lifecycle_manager = launch_ros.actions.Node(
-        package='nav2_lifecycle_manager',
-        executable='lifecycle_manager',
-        name='lifecycle_manager_localization',
-        output='screen',
-        parameters=[{
-            'use_sim_time': params['use_sim_time'],
-            'autostart': True,
-            'node_names': lifecycle_nodes}])
+  lifecycle_manager = launch_ros.actions.Node(
+      package='nav2_lifecycle_manager',
+      executable='lifecycle_manager',
+      name='lifecycle_manager_localization',
+      output='screen',
+      parameters=[{
+          'use_sim_time': params['use_sim_time'],
+          'autostart': True,
+          'node_names': lifecycle_nodes}])
 
-    ld.add_action(launch_ros.actions.PushRosNamespace(namespace=params['namespace']))
-#    ld.add_action(map_server)
-    ld.add_action(amcl_node)
-    ld.add_action(lifecycle_manager)
+  ld.add_action(launch_ros.actions.PushRosNamespace(namespace=params['namespace']))
+  ld.add_action(map_server)
+  ld.add_action(amcl_node)
+  ld.add_action(lifecycle_manager)
 
-    return ld
+  return ld
