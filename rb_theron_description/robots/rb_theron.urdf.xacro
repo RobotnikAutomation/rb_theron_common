@@ -73,7 +73,7 @@
   <xacro:sensor_sick_tim571 ns="$(arg robot_ns)" prefix="rear_laser" parent="base_link" gpu="$(arg gpu)">
     <origin xyz="-0.2675 0.215 0.1613" rpy="0 -3.1416 -0.7854"/>
   </xacro:sensor_sick_tim571>
-  <xacro:sensor_velodyne_vlp16 ns="$(arg robot_ns)" prefix="top_laser_" parent="base_link" gpu="$(arg gpu)">
+  <xacro:sensor_velodyne_vlp16 ns="$(arg robot_ns)" prefix="top_laser" parent="base_link" gpu="$(arg gpu)">
     <origin xyz="0 0 0.3" rpy="0 0 0"/>
   </xacro:sensor_velodyne_vlp16>
 
