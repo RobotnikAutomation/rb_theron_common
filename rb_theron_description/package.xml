@@ -19,12 +19,16 @@
 
   <buildtool_depend>ament_cmake</buildtool_depend>
 
-  <exec_depend>robot_state_publisher</exec_depend>
+  <!-- ROS2 -->
   <exec_depend>launch</exec_depend>
   <exec_depend>launch_ros</exec_depend>
-  <exec_depend>robotnik_sensors</exec_depend>
   <exec_depend>urdf</exec_depend>
   <exec_depend>xacro</exec_depend>
+  <exec_depend>robot_state_publisher</exec_depend>
+
+  <!-- OTHER DESCRIPTIONS -->
+  <exec_depend>robotnik_sensors</exec_depend>
+
   <export>
     <build_type>ament_cmake</build_type>
     <gazebo_ros gazebo_model_path="${prefix}/.."/>
