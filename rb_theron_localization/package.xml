@@ -20,7 +20,6 @@
   <buildtool_depend>ament_cmake</buildtool_depend>
 
   <exec_depend>launch</exec_depend>
-  <exec_depend>ros_launch</exec_depend>
   <exec_depend>robotnik_common</exec_depend>
   <exec_depend>slam_toolbox</exec_depend>
   <exec_depend>ira_laser_tools</exec_depend>
