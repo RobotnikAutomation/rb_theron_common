@@ -24,74 +24,46 @@
 # SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 import os, launch, launch_ros
-from ament_index_python.packages import get_package_share_directory
-
-from robotnik_common.launch import RewrittenYaml
-
-def read_params(ld : launch.LaunchDescription, params : list[tuple[str, str, str]]): # name, description, default_value
-
-  # Declare the launch options
-  ld.add_action(launch.actions.DeclareLaunchArgument(
-    name='environment',
-    description='Read parameters from environment variables',
-    choices=['true', 'false'],
-    default_value='true',
-  ))
-  for param in params:
-    ld.add_action(launch.actions.DeclareLaunchArgument(
-      name=param[0], description=param[1], default_value=param[2],))
-
-  # Get the launch configuration variables
-  ret={}
-  if launch.substitutions.LaunchConfiguration('environment') == 'false':
-    for param in params:
-      ret[param[0]] = launch.substitutions.LaunchConfiguration(param[0])
-  else:
-    for param in params:
-      if str.upper(param[0]) in os.environ:
-        ret[param[0]] = launch.substitutions.EnvironmentVariable(str.upper(param[0]))
-      else: ret[param[0]] = launch.substitutions.LaunchConfiguration(param[0])
-
-  return ret
-
+from robotnik_common.launch import add_launch_args
 
 def generate_launch_description():
 
-    ld = launch.LaunchDescription()
-    p = [
-      ('use_sim_time', 'Use simulation (Gazebo) clock if true', 'true'),
-      ('robot_id', 'Robot id', 'robot'),
-      ('namespace', 'Namespace', launch.substitutions.LaunchConfiguration('robot_id')),
-      ('base_frame', 'Base frame', 'base_link'),
-      ('laserscan_topics', 'Laser scan topics', 'front_laser/scan rear_laser/scan'),
-      ('angle_min', 'Minimum angle', '-3.141592653589793'),
-      ('angle_max', 'Maximum angle', '3.141592653589793'),
-      ('angle_increment', 'Angle increment', '0.005'),
-      ('scan_time', 'Scan time', '0.0'),
-      ('range_min', 'Minimum range', '0.1'),
-      ('range_max', 'Maximum range', '20.0'),
-    ]
-    params = read_params(ld, p)
+  ld = launch.LaunchDescription()
+  p = [
+    ('use_sim_time', 'Use simulation (Gazebo) clock if true', 'true'),
+    ('robot_id', 'Robot id', 'robot'),
+    ('namespace', 'Namespace', launch.substitutions.LaunchConfiguration('robot_id')),
+    ('base_frame', 'Base frame', 'base_link'),
+    ('output_topic', 'Output topic', 'laser'),
+    ('laserscan_topics', 'Laser scan topics', 'front_laser/scan rear_laser/scan'),
+    ('angle_min', 'Minimum angle', '-3.141592653589793'),
+    ('angle_max', 'Maximum angle', '3.141592653589793'),
+    ('angle_increment', 'Angle increment', '0.005'),
+    ('scan_time', 'Scan time', '0.0'),
+    ('range_min', 'Minimum range', '0.1'),
+    ('range_max', 'Maximum range', '20.0'),
+  ]
+  params = add_launch_args(ld, p)
 
-    ld.add_action(launch_ros.actions.PushRosNamespace(namespace=params['namespace']))
-    ld.add_action(launch_ros.actions.Node(
-        package='ira_laser_tools',
-        executable='laserscan_multi_merger',
-        name='laserscan_merger',
-        output='screen',
-        parameters=[{
-            'use_sim_time': params['use_sim_time'],
-            'destination_frame': [params['robot_id'], '/base_link'],
-            'cloud_destination_topic': "laser/points",
-            'scan_destination_topic': "laser/scan",
-            'laserscan_topics': params['laserscan_topics'],
-            'angle_min': params['angle_min'],
-            'angle_max': params['angle_max'],
-            'angle_increment': params['angle_increment'],
-            'scan_time': params['scan_time'],
-            'range_min': params['range_min'],
-            'range_max': params['range_max'],
-        }],
-    ))
+  ld.add_action(launch_ros.actions.Node(
+    namespace=params['namespace'],
+    package='ira_laser_tools',
+    executable='laserscan_multi_merger',
+    name='laserscan_merger',
+    output='screen',
+    parameters=[{
+      'use_sim_time': params['use_sim_time'],
+      'destination_frame': [params['robot_id'], '/', params['base_frame']],
+      'cloud_destination_topic': [params['output_topic'], '/points'],
+      'scan_destination_topic': [params['output_topic'], '/scan'],
+      'laserscan_topics': params['laserscan_topics'],
+      'angle_min': params['angle_min'],
+      'angle_max': params['angle_max'],
+      'angle_increment': params['angle_increment'],
+      'scan_time': params['scan_time'],
+      'range_min': params['range_min'],
+      'range_max': params['range_max'],
+    }],
+  ))
 
-    return ld
+  return ld

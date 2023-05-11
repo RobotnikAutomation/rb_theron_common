@@ -23,7 +23,7 @@
 # (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 # SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-import launch, launch_ros, os
+import launch, launch_ros
 from ament_index_python.packages import get_package_share_directory
 from robotnik_common.launch import RewrittenYaml, add_launch_args
 
@@ -32,48 +32,37 @@ def generate_launch_description():
   ld = launch.LaunchDescription()
   p = [
     ('use_sim_time', 'Use simulation/Gazebo clock', 'true'),
-    ('robot_id', 'Frame id of the sensor', 'robot'),
-    ('namespace', 'Namespace of the nodes', launch.substitutions.LaunchConfiguration('robot_id')),
-    ('amcl_file', 'Absolute path to the amcl file', [get_package_share_directory('rb_theron_localization'), '/config/amcl.yaml']),
-    ('map_frame_id', 'Frame id of the map', 'map'),
+    ('namespace', 'Namespace of the nodes', ''),
+    ('map_name', 'Name of the map file', 'willow_garage'),
+    ('map_file_abs', 'Absolute path to the map file', [get_package_share_directory('rb_theron_localization'), '/maps/', launch.substitutions.LaunchConfiguration('map_name'), '/map.yaml']),
+    ('map_frame_id', 'Frame id of the map', ['map']),
   ]
   params = add_launch_args(ld, p)
 
-  amcl_rewritten = RewrittenYaml(
-      source_file=params['amcl_file'],
-      param_rewrites={
-          'use_sim_time': params['use_sim_time'],
-          'base_frame_id': [params['robot_id'], '/base_footprint'],
-          'global_frame_id': params['map_frame_id'],
-          'odom_frame_id': [params['robot_id'], '/odom'],
-          'scan_topic': ['laser/scan'],
-      },
-      root_key=[params['namespace']],
-      convert_types=True,
-  )
-
   ld.add_action(launch_ros.actions.Node(
+    package='nav2_map_server',
+    executable='map_server',
+    name='map_server',
     namespace=params['namespace'],
-    package='nav2_amcl',
-    executable='amcl',
-    name='amcl',
-    parameters=[amcl_rewritten],
-    remappings=[
-      ('map', '/map'),
-    ],
+    parameters=[{
+      'use_sim_time': params['use_sim_time'],
+      'yaml_filename': params['map_file_abs'],
+      'topic_name': '/map',
+      'frame_id': params['map_frame_id'],
+    }],
     output='screen'
   ))
 
   ld.add_action(launch_ros.actions.Node(
-    namespace=params['namespace'],
     package='nav2_lifecycle_manager',
     executable='lifecycle_manager',
-    name='lifecycle_manager_localization',
+    name='lifecycle_manager_map_server',
+    namespace=params['namespace'],
     output='screen',
     parameters=[{
       'use_sim_time': params['use_sim_time'],
       'autostart': True,
-      'node_names': ['amcl'],
+      'node_names': ['map_server'],
     }],
   ))
 

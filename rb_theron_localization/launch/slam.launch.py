@@ -23,12 +23,9 @@
 # (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 # SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-import os
-import launch
-import launch_ros
+import launch, launch_ros, os
 from ament_index_python.packages import get_package_share_directory
-
-from robotnik_common.launch import RewrittenYaml
+from robotnik_common.launch import RewrittenYaml, add_launch_args
 
 def read_params(ld : launch.LaunchDescription, params : list[tuple[str, str, str]]): # name, description, default_value
 
@@ -64,7 +61,7 @@ def generate_launch_description():
     ('robot_id', 'Name of the robot', 'robot'),
     ('slam_params_file', 'Full path to the ROS2 parameters file to use for the slam_toolbox node', os.path.join(get_package_share_directory("rb_theron_localization"), "config", "slam_params.yaml")),
   ]
-  params = read_params(ld, p)
+  params = add_launch_args(ld, p)
 
   config_file = RewrittenYaml(
     source_file=params['slam_params_file'],
