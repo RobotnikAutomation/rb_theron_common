@@ -25,6 +25,17 @@
   <exec_depend>nav2_bt_navigator</exec_depend>
   <exec_depend>laser_filters</exec_depend>
   <exec_depend>pointcloud_to_laserscan</exec_depend>
+  <exec_depend>nav2_controller</exec_depend>
+  <exec_depend>nav2_smoother</exec_depend>
+  <exec_depend>nav2_planner</exec_depend>
+  <exec_depend>nav2_behaviors</exec_depend>
+  <exec_depend>nav2_waypoint_follower</exec_depend>
+  <exec_depend>nav2_velocity_smoother</exec_depend>
+  <exec_depend>nav2_rotation_shim_controller</exec_depend>
+  <exec_depend>nav2_navfn_planner</exec_depend>
+  <exec_depend>dwb_core</exec_depend>
+  <exec_depend>dwb_plugins</exec_depend>
+  <exec_depend>dwb_critics</exec_depend>
   <export>
     <build_type>ament_cmake</build_type>
   </export>
