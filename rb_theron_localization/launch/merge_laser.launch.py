@@ -24,55 +24,45 @@
 # SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 import os, launch, launch_ros
-
-def read_params(ld : launch.LaunchDescription, params : list[tuple[str, str, str]]): # name, description, default_value
-
-  # Declare the launch options
-  for param in params:
-    ld.add_action(launch.actions.DeclareLaunchArgument(
-      name=param[0], description=param[1], default_value=param[2],))
-
-  # Get the launch configuration variables
-  ret={}
-  for param in params:
-    ret[param[0]] = launch.substitutions.LaunchConfiguration(param[0])
-
-  return ret
-
+from robotnik_common.launch import add_launch_args
 
 def generate_launch_description():
 
   ld = launch.LaunchDescription()
   p = [
     ('use_sim_time', 'Use simulation (Gazebo) clock if true', 'true'),
-    ('robot_description_file', 'Name of the file containing the robot description', 'rb_theron.urdf.xacro'),
-    ('robot_description_path', 'Path to the file containing the robot description', [launch_ros.substitutions.FindPackageShare('rb_theron_description'), '/robots/', launch.substitutions.LaunchConfiguration('robot_description_file')]),
-    ('robot_id', 'Id of the robot', 'robot'),
-    ('controller_path', 'Path to the file containing the controllers configuration', '\" \"'),
+    ('robot_id', 'Robot id', 'robot'),
+    ('namespace', 'Namespace', launch.substitutions.LaunchConfiguration('robot_id')),
+    ('base_frame', 'Base frame', 'base_link'),
+    ('output_topic', 'Output topic', 'laser'),
+    ('laserscan_topics', 'Laser scan topics', 'front_laser/scan rear_laser/scan'),
+    ('angle_min', 'Minimum angle', '-3.141592653589793'),
+    ('angle_max', 'Maximum angle', '3.141592653589793'),
+    ('angle_increment', 'Angle increment', '0.005'),
+    ('scan_time', 'Scan time', '0.0'),
+    ('range_min', 'Minimum range', '0.1'),
+    ('range_max', 'Maximum range', '20.0'),
   ]
-  params = read_params(ld, p)
-
-  robot_description_content = launch.substitutions.Command([
-    launch.substitutions.PathJoinSubstitution([launch.substitutions.FindExecutable(name="xacro")]),
-    ' ', params['robot_description_path'],
-    ' robot_id:=', params['robot_id'],
-    ' robot_ns:=', params['robot_id'],
-    ' config_controllers:=', params['controller_path'],
-  ])
-  # Create parameter
-  robot_description_param = launch_ros.descriptions.ParameterValue(robot_description_content, value_type=str)
+  params = add_launch_args(ld, p)
 
   ld.add_action(launch_ros.actions.Node(
-    namespace=params['robot_id'],
-    package='robot_state_publisher',
-    executable='robot_state_publisher',
-    name='robot_state_publisher',
+    namespace=params['namespace'],
+    package='ira_laser_tools',
+    executable='laserscan_multi_merger',
+    name='laserscan_merger',
     output='screen',
     parameters=[{
       'use_sim_time': params['use_sim_time'],
-      'robot_description': robot_description_param,
-      'publish_frequency': 100.0,
-      'frame_prefix': [params['robot_id'], '/'],
+      'destination_frame': [params['robot_id'], '/', params['base_frame']],
+      'cloud_destination_topic': [params['output_topic'], '/points'],
+      'scan_destination_topic': [params['output_topic'], '/scan'],
+      'laserscan_topics': params['laserscan_topics'],
+      'angle_min': params['angle_min'],
+      'angle_max': params['angle_max'],
+      'angle_increment': params['angle_increment'],
+      'scan_time': params['scan_time'],
+      'range_min': params['range_min'],
+      'range_max': params['range_max'],
     }],
   ))
 

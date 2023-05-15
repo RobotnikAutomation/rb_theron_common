@@ -6,7 +6,7 @@
   <name>rb_theron_common</name>
   <version>1.0.0</version>
   <description>
-    The rb_theron_common package. It contains rb_theron common 
+    The rb_theron_common package. It contains rb_theron common
     ackages used for robot control and for simulation.
   </description>
 
@@ -20,8 +20,6 @@
 
   <exec_depend>rb_theron_control</exec_depend>
   <exec_depend>rb_theron_description</exec_depend>
-  <exec_depend>rb_theron_localization</exec_depend>
-  <exec_depend>rb_theron_navigation</exec_depend>
 
   <export>
     <build_type>ament_cmake</build_type>
