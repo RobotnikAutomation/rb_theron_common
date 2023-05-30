@@ -24,6 +24,8 @@
 	<!-- Import Gazebo Stuff -->
 	<xacro:include filename="$(find rb_theron_description)/urdf/common.gazebo.xacro" />
 
+	<!-- Import Elevator -->
+	<xacro:include filename="$(find rb_theron_description)/urdf/elevator/elevator.urdf.xacro"/>
 
 	<!-- ***************** -->
 	<!-- Global parameters -->
@@ -37,6 +39,18 @@
 
 	<!-- Flag to select the high or low quality model -->
 	<xacro:property name="hq" value="true" />
+
+	<!-- ******************* -->
+	<!-- ELEVATOR PARAMETERS -->
+	<!-- ******************* -->
+
+	<xacro:property name="elevator_x" value="0.0" />
+	<xacro:property name="elevator_y" value="0.0" />
+	<xacro:property name="elevator_z" value="0.2238" />
+
+	<xacro:arg name="prefix" default="robot_"/>
+	<xacro:arg name="ros_planar_move_plugin" default="false"/>
+	<xacro:arg name="gpu" default="false"/>
 
 	<!-- *************** -->
 	<!-- Robots Elements -->
@@ -53,6 +67,11 @@
 	<xacro:ros_control/>
 
 	<xacro:gazebo_colors prefix="$(arg prefix)"/>
+
+	<!-- ELEVATOR_PLATFORM -->
+	<xacro:elevator_platform prefix="$(arg prefix)elevator" parent="$(arg prefix)base_link" hq="${hq}">
+		<origin xyz="${elevator_x} -${elevator_y} ${elevator_z}" rpy="1.5708 0 1.5708"/>
+	</xacro:elevator_platform>
 
   <!-- SENSORS -->
   <!-- TODO: Moved 0.01 in x, otherwise the camera is still inside the robot -->
