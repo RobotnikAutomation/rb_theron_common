@@ -12,12 +12,6 @@
 	<!-- Import differential base elements -->
 	<xacro:include filename="$(find rb_theron_description)/robots/rb_theron_base.urdf.xacro" />
 
-	<!-- Import wheels -->
-	<xacro:include filename="$(find rb_theron_description)/urdf/wheels/rubber_wheel_150.urdf.xacro" />
-
-	<!-- Import casters -->
-	<xacro:include filename="$(find rb_theron_description)/urdf/wheels/castor.urdf.xacro" />
-
 	<!-- Import all available sensors -->
 	<xacro:include filename="$(find robotnik_sensors)/urdf/all_sensors.urdf.xacro" />
 
