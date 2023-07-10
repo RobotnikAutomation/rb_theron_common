@@ -13,7 +13,7 @@
 	<xacro:include filename="$(find rb_theron_description)/urdf/bases/theron_base.urdf.xacro" />
 
 	<!-- Import wheels -->
-	<xacro:include filename="$(find rb_theron_description)/urdf/wheels/rubber_wheel_140.urdf.xacro" />
+	<xacro:include filename="$(find rb_theron_description)/urdf/wheels/rubber_wheel_150.urdf.xacro" />
 
 	<!-- Import casters -->
 	<xacro:include filename="$(find rb_theron_description)/urdf/wheels/castor.urdf.xacro" />
