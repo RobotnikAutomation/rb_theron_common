@@ -30,63 +30,102 @@ from ament_index_python.packages import get_package_share_directory
 
 from robotnik_common.launch import RewrittenYaml
 
-def read_params(ld : launch.LaunchDescription, params : list[tuple[str, str, str]]): # name, description, default_value
+def read_params(
+    ld: launch.LaunchDescription,
+    params: list[
+        tuple[
+            str,
+            str,
+            str
+        ]
+    ]
+):
+    # name, description, default_value
 
   # Declare the launch options
-  ld.add_action(launch.actions.DeclareLaunchArgument(
-    name='environment',
-    description='Read parameters from environment variables',
-    choices=['true', 'false'],
-    default_value='true',
-  ))
-  for param in params:
-    ld.add_action(launch.actions.DeclareLaunchArgument(
-      name=param[0], description=param[1], default_value=param[2],))
-
-  # Get the launch configuration variables
-  ret={}
-  if launch.substitutions.LaunchConfiguration('environment') == 'false':
+    ld.add_action(
+        launch.actions.DeclareLaunchArgument(
+            name='environment',
+            description='Read parameters from environment variables',
+            choices=['true', 'false'],
+            default_value='true',
+        )
+    )
     for param in params:
-      ret[param[0]] = launch.substitutions.LaunchConfiguration(param[0])
-  else:
-    for param in params:
-      if str.upper(param[0]) in os.environ:
-        ret[param[0]] = launch.substitutions.EnvironmentVariable(str.upper(param[0]))
-      else: ret[param[0]] = launch.substitutions.LaunchConfiguration(param[0])
+        ld.add_action(
+            launch.actions.DeclareLaunchArgument(
+                name=param[0],
+                description=param[1],
+                default_value=param[2],
+            )
+        )
 
-  return ret
+    # Get the launch configuration variables
+    ret = {}
+    if launch.substitutions.LaunchConfiguration('environment') == 'false':
+        for param in params:
+            ret[param[0]] = launch.substitutions.LaunchConfiguration(param[0])
+    else:
+        for param in params:
+            if str.upper(param[0]) in os.environ:
+                ret[param[0]] = launch.substitutions.EnvironmentVariable(
+                    str.upper(param[0])
+                )
+            else:
+                ret[param[0]] = launch.substitutions.LaunchConfiguration(
+                    param[0]
+                )
+
+    return ret
 
 
 def generate_launch_description():
-  ld = launch.LaunchDescription()
-  p = [
-    ('use_sim_time', 'Use simulation/Gazebo clock', 'true'),
-    ('robot_id', 'Name of the robot', 'robot'),
-    ('slam_params_file', 'Full path to the ROS2 parameters file to use for the slam_toolbox node', os.path.join(get_package_share_directory("rb_theron_localization"), "config", "slam_params.yaml")),
-  ]
-  params = read_params(ld, p)
+    ld = launch.LaunchDescription()
+    long_text = "Full path to the ROS2 parameters file to use "
+    long_text += "for the slam_toolbox node"
+    p = [
+        (
+            'use_sim_time', 'Use simulation/Gazebo clock', 'true'
+        ),
+        (
+            'robot_id', 'Name of the robot', 'robot'
+        ),
+        (
+            'slam_params_file',
+            long_text,
+            os.path.join(
+                get_package_share_directory("rb_theron_localization"),
+                "config",
+                "slam_params.yaml"
+            )
+        ),
+    ]
+    params = read_params(ld, p)
 
-  config_file = RewrittenYaml(
-    source_file=params['slam_params_file'],
-    param_rewrites={
-      'use_sim_time': params['use_sim_time'],
-      'odom_frame': [params['robot_id'], '/odom'],
-      'base_frame': [params['robot_id'], '/base_footprint'],
-      'map_frame': 'map',
-      'scan_topic': [params['robot_id'], '/laser/scan']
-    },
-#    root_key=[params['namespace']],
-#    root_key=[''],
-    convert_types=True,
-  )
+    config_file = RewrittenYaml(
+        source_file=params['slam_params_file'],
+        param_rewrites={
+            'use_sim_time': params['use_sim_time'],
+            'odom_frame': [params['robot_id'], '/odom'],
+            'base_frame': [params['robot_id'], '/base_footprint'],
+            'map_frame': 'map',
+            'scan_topic': [params['robot_id'], '/laser/scan']
+        },
+        # root_key=[params['namespace']],
+        # root_key=[''],
+        convert_types=True,
+    )
 
 # ld.add_action(launch_ros.actions.PushRosNamespace(namespace='robot'))
-  ld.add_action(launch_ros.actions.Node(
-    package='slam_toolbox',
-    executable='async_slam_toolbox_node',
-    name='slam_toolbox',
-    output='screen',
-    parameters=[config_file],
-  ))
+    ld.add_action(
+        launch_ros.actions.Node(
+            package='slam_toolbox',
+            executable='async_slam_toolbox_node',
+            name='slam_toolbox',
+            output='screen',
+            parameters=[config_file],
+        )
+    )
 
-  return ld
+    return ld
+
