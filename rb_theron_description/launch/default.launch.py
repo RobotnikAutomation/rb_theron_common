@@ -23,57 +23,115 @@
 # (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 # SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-import os, launch, launch_ros
+import os
+import launch
+import launch_ros
 
-def read_params(ld : launch.LaunchDescription, params : list[tuple[str, str, str]]): # name, description, default_value
 
-  # Declare the launch options
-  for param in params:
-    ld.add_action(launch.actions.DeclareLaunchArgument(
-      name=param[0], description=param[1], default_value=param[2],))
+def read_params(
+    ld: launch.LaunchDescription,
+    params: list[
+        tuple[
+            str,
+            str,
+            str,
+        ]
+    ]
+): # name, description, default_value
 
-  # Get the launch configuration variables
-  ret={}
-  for param in params:
-    ret[param[0]] = launch.substitutions.LaunchConfiguration(param[0])
+    # Declare the launch options
+    for param in params:
+        ld.add_action(
+            launch.actions.DeclareLaunchArgument(
+                name=param[0],
+                description=param[1],
+                default_value=param[2],
+            )
+        )
 
-  return ret
+    # Get the launch configuration variables
+    ret = {}
+    for param in params:
+        ret[param[0]] = launch.substitutions.LaunchConfiguration(param[0])
+
+    return ret
 
 
 def generate_launch_description():
 
-  ld = launch.LaunchDescription()
-  p = [
-    ('use_sim_time', 'Use simulation (Gazebo) clock if true', 'true'),
-    ('robot_description_file', 'Name of the file containing the robot description', 'rb_theron.urdf.xacro'),
-    ('robot_description_path', 'Path to the file containing the robot description', [launch_ros.substitutions.FindPackageShare('rb_theron_description'), '/robots/', launch.substitutions.LaunchConfiguration('robot_description_file')]),
-    ('robot_id', 'Id of the robot', 'robot'),
-    ('controller_path', 'Path to the file containing the controllers configuration', '\" \"'),
-  ]
-  params = read_params(ld, p)
+    ld = launch.LaunchDescription()
+    p = [
+        (
+            'use_sim_time',
+            'Use simulation (Gazebo) clock if true',
+            'true'
+        ),
+        (
+            'robot_description_file',
+            'Name of the file containing the robot description',
+            'rb_theron.urdf.xacro'
+        ),
+        (
+            'robot_description_path',
+            'Path to the file containing the robot description',
+            [
+                launch_ros.substitutions.FindPackageShare(
+                    'rb_theron_description'
+                ),
+                '/robots/',
+                launch.substitutions.LaunchConfiguration(
+                    'robot_description_file'
+                )
+            ]
+        ),
+        (
+            'robot_id',
+            'Id of the robot',
+            'robot'
+        ),
+        (
+            'controller_path',
+            'Path to the file containing the controllers configuration',
+            '\" \"'
+        ),
+    ]
+    params = read_params(ld, p)
 
-  robot_description_content = launch.substitutions.Command([
-    launch.substitutions.PathJoinSubstitution([launch.substitutions.FindExecutable(name="xacro")]),
-    ' ', params['robot_description_path'],
-    ' robot_id:=', params['robot_id'],
-    ' robot_ns:=', params['robot_id'],
-    ' config_controllers:=', params['controller_path'],
-  ])
-  # Create parameter
-  robot_description_param = launch_ros.descriptions.ParameterValue(robot_description_content, value_type=str)
+    robot_description_content = launch.substitutions.Command(
+        [
+            launch.substitutions.PathJoinSubstitution(
+                [
+                    launch.substitutions.FindExecutable(name="xacro")
+                ]
+            ),
+            ' ', params['robot_description_path'],
+            ' robot_id:=', params['robot_id'],
+            ' robot_ns:=', params['robot_id'],
+            ' config_controllers:=', params['controller_path'],
+        ]
+    )
+    # Create parameter
+    robot_description_param = launch_ros.descriptions.ParameterValue(
+        robot_description_content,
+        value_type=str
+    )
 
-  ld.add_action(launch_ros.actions.Node(
-    namespace=params['robot_id'],
-    package='robot_state_publisher',
-    executable='robot_state_publisher',
-    name='robot_state_publisher',
-    output='screen',
-    parameters=[{
-      'use_sim_time': params['use_sim_time'],
-      'robot_description': robot_description_param,
-      'publish_frequency': 100.0,
-      'frame_prefix': [params['robot_id'], '/'],
-    }],
-  ))
+    ld.add_action(
+        launch_ros.actions.Node(
+            namespace=params['robot_id'],
+            package='robot_state_publisher',
+            executable='robot_state_publisher',
+            name='robot_state_publisher',
+            output='screen',
+            parameters=[
+                {
+                    'use_sim_time': params['use_sim_time'],
+                    'robot_description': robot_description_param,
+                    'publish_frequency': 100.0,
+                    'frame_prefix': [params['robot_id'], '/'],
+                }
+            ],
+        )
+    )
 
   return ld
