@@ -23,13 +23,19 @@
 # (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 # SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-import os
-import launch
-import launch_ros
+from launch import LaunchDescription
+from launch.actions import DeclareLaunchArgument
+from launch.substitutions import Command
+from launch.substitutions import FindExecutable
+from launch.substitutions import LaunchConfiguration
+from launch.substitutions import PathJoinSubstitution
+from launch_ros.actions import Node
+from launch_ros.descriptions import ParameterValue
+from launch_ros.substitutions import FindPackageShare
 
 
 def read_params(
-    ld: launch.LaunchDescription,
+    ld: LaunchDescription,
     params: list[
         tuple[
             str,
@@ -42,7 +48,7 @@ def read_params(
     # Declare the launch options
     for param in params:
         ld.add_action(
-            launch.actions.DeclareLaunchArgument(
+            DeclareLaunchArgument(
                 name=param[0],
                 description=param[1],
                 default_value=param[2],
@@ -52,14 +58,14 @@ def read_params(
     # Get the launch configuration variables
     ret = {}
     for param in params:
-        ret[param[0]] = launch.substitutions.LaunchConfiguration(param[0])
+        ret[param[0]] = LaunchConfiguration(param[0])
 
     return ret
 
 
 def generate_launch_description():
 
-    ld = launch.LaunchDescription()
+    ld = LaunchDescription()
     p = [
         (
             'use_sim_time',
@@ -75,11 +81,11 @@ def generate_launch_description():
             'robot_description_path',
             'Path to the file containing the robot description',
             [
-                launch_ros.substitutions.FindPackageShare(
+                FindPackageShare(
                     'rb_theron_description'
                 ),
                 '/robots/',
-                launch.substitutions.LaunchConfiguration(
+                LaunchConfiguration(
                     'robot_description_file'
                 )
             ]
@@ -97,11 +103,11 @@ def generate_launch_description():
     ]
     params = read_params(ld, p)
 
-    robot_description_content = launch.substitutions.Command(
+    robot_description_content = Command(
         [
-            launch.substitutions.PathJoinSubstitution(
+            PathJoinSubstitution(
                 [
-                    launch.substitutions.FindExecutable(name="xacro")
+                    FindExecutable(name="xacro")
                 ]
             ),
             ' ', params['robot_description_path'],
@@ -111,13 +117,13 @@ def generate_launch_description():
         ]
     )
     # Create parameter
-    robot_description_param = launch_ros.descriptions.ParameterValue(
+    robot_description_param = ParameterValue(
         robot_description_content,
         value_type=str
     )
 
     ld.add_action(
-        launch_ros.actions.Node(
+        Node(
             namespace=params['robot_id'],
             package='robot_state_publisher',
             executable='robot_state_publisher',
@@ -134,4 +140,4 @@ def generate_launch_description():
         )
     )
 
-  return ld
+    return ld
