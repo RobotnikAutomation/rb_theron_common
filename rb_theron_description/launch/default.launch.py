@@ -43,7 +43,8 @@ def read_params(
             str,
         ]
     ]
-): # name, description, default_value
+):
+    # name, description, default_value
 
     # Declare the launch options
     for param in params:
@@ -100,6 +101,11 @@ def generate_launch_description():
             'Path to the file containing the controllers configuration',
             '\" \"'
         ),
+        (
+            'gpu',
+            'use of the gpu',
+            'true'
+        ),
     ]
     params = read_params(ld, p)
 
@@ -114,6 +120,7 @@ def generate_launch_description():
             ' robot_id:=', params['robot_id'],
             ' robot_ns:=', params['robot_id'],
             ' config_controllers:=', params['controller_path'],
+            ' gpu:=', params['gpu'],
         ]
     )
     # Create parameter
