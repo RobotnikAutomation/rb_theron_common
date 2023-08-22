@@ -43,7 +43,7 @@ def read_params(
 ):
     # name, description, default_value
 
-   # Declare the launch options
+    # Declare the launch options
     ld.add_action(
         launch.actions.DeclareLaunchArgument(
             name='environment',

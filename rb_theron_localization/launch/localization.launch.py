@@ -218,7 +218,8 @@ def generate_launch_description():
                 get_package_share_directory('rb_theron_localization'),
                 '/maps/',
                 launch.substitutions.LaunchConfiguration('map_name'),
-                '/map.yaml']
+                '/map.yaml'
+            ]
         ),
         (
             'amcl_file',
