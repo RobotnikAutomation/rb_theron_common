@@ -28,6 +28,7 @@ from ament_index_python.packages import get_package_share_directory
 from launch import LaunchDescription
 from launch.substitutions import LaunchConfiguration
 from launch_ros.actions import Node
+from launch_ros.actions import PushRosNamespace
 
 from robotnik_common.launch import ExtendedArgument
 from robotnik_common.launch import AddArgumentParser
@@ -43,6 +44,15 @@ def generate_launch_description():
         default_value='true',
         use_env=True,
         environment='use_sim_time',
+    )
+    add_to_launcher.add_arg(arg)
+
+    arg = ExtendedArgument(
+        name='robot_id',
+        description='Robot ID',
+        default_value='robot',
+        use_env=True,
+        environment='ROBOT_ID',
     )
     add_to_launcher.add_arg(arg)
 
@@ -83,48 +93,63 @@ def generate_launch_description():
         name='map_frame_id',
         description='Frame id of the map',
         default_value=[
-            'map'
+            LaunchConfiguration('robot_id'),
+            '/',
+            'map',
         ],
         use_env=True,
         environment='MAP_FRAME_ID',
     )
     add_to_launcher.add_arg(arg)
 
+    arg = ExtendedArgument(
+        name='topic_name',
+        description='topic of the map',
+        default_value='map',
+        use_env=True,
+        environment='TOPIC_NAME',
+    )
+    add_to_launcher.add_arg(arg)
+
     params = add_to_launcher.process_arg()
 
-    ld.add_action(
-        Node(
-            package='nav2_map_server',
-            executable='map_server',
-            name='map_server',
-            namespace=params['namespace'],
-            parameters=[
-                {
-                    'use_sim_time': params['use_sim_time'],
-                    'yaml_filename': params['map_file_abs'],
-                    'topic_name': '/map',
-                    'frame_id': params['map_frame_id'],
-                }
-            ],
-            output='screen'
-        )
+    map_server_node = Node(
+        package='nav2_map_server',
+        executable='map_server',
+        name='map_server',
+        # namespace=params['namespace'],
+        parameters=[
+            {
+                'use_sim_time': params['use_sim_time'],
+                'yaml_filename': params['map_file_abs'],
+                'topic_name': params['topic_name'],
+                'frame_id': params['map_frame_id'],
+            }
+        ],
+        output='screen'
+    )
+
+    lifecycle_manager = Node(
+        package='nav2_lifecycle_manager',
+        executable='lifecycle_manager',
+        name='lifecycle_manager_map_server',
+        # namespace=params['namespace'],
+        output='screen',
+        parameters=[
+            {
+                'use_sim_time': params['use_sim_time'],
+                'autostart': True,
+                'node_names': ['map_server'],
+            }
+        ],
     )
 
     ld.add_action(
-        Node(
-            package='nav2_lifecycle_manager',
-            executable='lifecycle_manager',
-            name='lifecycle_manager_map_server',
-            namespace=params['namespace'],
-            output='screen',
-            parameters=[
-                {
-                    'use_sim_time': params['use_sim_time'],
-                    'autostart': True,
-                    'node_names': ['map_server'],
-                }
-            ],
+        PushRosNamespace(
+            namespace=params['namespace']
         )
     )
+    ld.add_action(map_server_node)
+    ld.add_action(lifecycle_manager)
 
     return ld
