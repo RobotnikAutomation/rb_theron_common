@@ -1,12 +1,13 @@
+---
 amcl:
   ros__parameters:
-    use_sim_time: True
+    use_sim_time: true
     base_frame_id: "robot/base_footprint"
     global_frame_id: "robot/map"
     odom_frame_id: "robot/odom"
 
     robot_model_type: "nav2_amcl::DifferentialMotionModel"
-    scan_topic: laser/scan
+    scan_topic: mergered_laser/scan
 
     set_initial_pose: true
     initial_pose:
