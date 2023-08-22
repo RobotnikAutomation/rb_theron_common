@@ -30,6 +30,7 @@ from ament_index_python.packages import get_package_share_directory
 
 from robotnik_common.launch import RewrittenYaml
 
+
 def read_params(
     ld: launch.LaunchDescription,
     params: list[
@@ -42,7 +43,7 @@ def read_params(
 ):
     # name, description, default_value
 
-  # Declare the launch options
+   # Declare the launch options
     ld.add_action(
         launch.actions.DeclareLaunchArgument(
             name='environment',
