@@ -23,125 +23,119 @@
 # (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 # SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-import os
-import launch
-
 from launch import LaunchDescription
 from launch.substitutions import LaunchConfiguration
 from launch_ros.actions import Node
 from launch_ros.actions import PushRosNamespace
-
-
-def read_params(
-    ld: LaunchDescription,
-    params: list[
-        tuple[
-            str,
-            str,
-            str
-        ]
-    ]
-):
-    # name, description, default_value
-
-    # Declare the launch options
-    ld.add_action(
-        launch.actions.DeclareLaunchArgument(
-            name='environment',
-            description='Read parameters from environment variables',
-            choices=['true', 'false'],
-            default_value='true',
-        )
-    )
-    for param in params:
-        ld.add_action(
-            launch.actions.DeclareLaunchArgument(
-                name=param[0],
-                description=param[1],
-                default_value=param[2],
-            )
-        )
-
-    # Get the launch configuration variables
-    ret = {}
-    if launch.substitutions.LaunchConfiguration('environment') == 'false':
-        for param in params:
-            ret[param[0]] = launch.substitutions.LaunchConfiguration(param[0])
-    else:
-        for param in params:
-            if str.upper(param[0]) in os.environ:
-                ret[param[0]] = launch.substitutions.EnvironmentVariable(
-                    str.upper(param[0])
-                )
-            else:
-                ret[param[0]] = launch.substitutions.LaunchConfiguration(
-                    param[0]
-                )
-
-    return ret
+from robotnik_common.launch import ExtendedArgument
+from robotnik_common.launch import AddArgumentParser
 
 
 def generate_launch_description():
 
-    ld = launch.LaunchDescription()
-    p = [
-        (
-            'use_sim_time',
-            'Use simulation (Gazebo) clock if true',
-            'true'
-        ),
-        (
-            'robot_id',
-            'Robot id',
-            'robot'
-        ),
-        (
-            'namespace',
-            'Namespace',
-            LaunchConfiguration('robot_id'),
-        ),
-        (
-            'base_frame',
-            'Base frame',
-            'base_link'
-        ),
-        (
-            'laserscan_topics',
-            'Laser scan topics',
-            'front_laser/scan rear_laser/scan'
-        ),
-        (
-            'angle_min',
-            'Minimum angle',
-            '-3.141592653589793'
-        ),
-        (
-            'angle_max',
-            'Maximum angle',
-            '3.141592653589793'
-        ),
-        (
-            'angle_increment',
-            'Angle increment',
-            '0.005'
-        ),
-        (
-            'scan_time',
-            'Scan time',
-            '0.0'
-        ),
-        (
-            'range_min',
-            'Minimum range',
-            '0.1'
-        ),
-        (
-            'range_max',
-            'Maximum range',
-            '20.0'
-        ),
-    ]
-    params = read_params(ld, p)
+    ld = LaunchDescription()
+    add_to_launcher = AddArgumentParser(ld)
+
+    arg = ExtendedArgument(
+        name='use_sim_time',
+        description='Use simulation/Gazebo clock',
+        default_value='true',
+        use_env=True,
+        environment='use_sim_time',
+    )
+    add_to_launcher.add_arg(arg)
+
+    arg = ExtendedArgument(
+        name='robot_id',
+        description='Robot ID',
+        default_value='robot',
+        use_env=True,
+        environment='ROBOT_ID',
+    )
+    add_to_launcher.add_arg(arg)
+
+    arg = ExtendedArgument(
+        name='namespace',
+        description='Namespace of the nodes',
+        default_value=LaunchConfiguration('robot_id'),
+        use_env=True,
+        environment='NAMESPACE',
+    )
+    add_to_launcher.add_arg(arg)
+
+    arg = ExtendedArgument(
+        name='base_frame',
+        description='Base frame',
+        default_value='base_link',
+        use_env=True,
+        environment='BASE_FRAME',
+    )
+    add_to_launcher.add_arg(arg)
+
+    arg = ExtendedArgument(
+        name='laserscan_topics',
+        description='Laser scan topics',
+        default_value='front_laser/scan rear_laser/scan',
+        use_env=True,
+        environment='LASERSCAN_TOPICS',
+    )
+    add_to_launcher.add_arg(arg)
+
+    arg = ExtendedArgument(
+        name='angle_min',
+        description='Minimum angle',
+        default_value='-3.141592653589793',
+        use_env=True,
+        environment='ANGLE_MIN',
+    )
+    add_to_launcher.add_arg(arg)
+
+    arg = ExtendedArgument(
+        name='angle_max',
+        description='Maximum angle',
+        default_value='3.141592653589793',
+        use_env=True,
+        environment='ANGLE_MAX',
+    )
+    add_to_launcher.add_arg(arg)
+
+    arg = ExtendedArgument(
+        name='angle_increment',
+        description='Angle increment',
+        default_value='0.005',
+        use_env=True,
+        environment='ANGLE_INCREMENT',
+    )
+    add_to_launcher.add_arg(arg)
+
+    arg = ExtendedArgument(
+        name='scan_time',
+        description='Scan time',
+        default_value='0.0',
+        use_env=True,
+        environment='SCAN_TIME',
+    )
+    add_to_launcher.add_arg(arg)
+
+    arg = ExtendedArgument(
+        name='range_min',
+        description='Minimum range',
+        default_value='0.1',
+        use_env=True,
+        environment='RANGE_MIN',
+    )
+    add_to_launcher.add_arg(arg)
+
+    arg = ExtendedArgument(
+        name='range_max',
+        description='Maximum range',
+        default_value='20.0',
+        use_env=True,
+        environment='RANGE_MAX',
+    )
+    add_to_launcher.add_arg(arg)
+
+    params = add_to_launcher.process_arg()
 
     ld.add_action(
         PushRosNamespace(
