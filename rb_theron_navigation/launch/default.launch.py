@@ -175,9 +175,9 @@ def generate_launch_description():
                 output='screen',
                 respawn_delay=2.0,
                 parameters=[
-                    {
-                        'use_sim_time': params['use_sim_time']
-                    },
+                    # {
+                    #     'use_sim_time': params['use_sim_time']
+                    # },
                     configured_params
                 ],
                 remappings=remappings + [('cmd_vel', 'cmd_vel_nav')]
@@ -189,9 +189,9 @@ def generate_launch_description():
                 output='screen',
                 respawn_delay=2.0,
                 parameters=[
-                    {
-                        'use_sim_time': params['use_sim_time']
-                    },
+                    # {
+                    #     'use_sim_time': params['use_sim_time']
+                    # },
                     configured_params
                 ],
                 remappings=remappings
@@ -203,9 +203,9 @@ def generate_launch_description():
                 output='screen',
                 respawn_delay=2.0,
                 parameters=[
-                    {
-                        'use_sim_time': params['use_sim_time']
-                    },
+                    # {
+                    #     'use_sim_time': params['use_sim_time']
+                    # },
                     configured_params,
                 ],
                 remappings=remappings
@@ -217,9 +217,9 @@ def generate_launch_description():
                 output='screen',
                 respawn_delay=2.0,
                 parameters=[
-                    {
-                        'use_sim_time': params['use_sim_time']
-                    },
+                    # {
+                    #     'use_sim_time': params['use_sim_time']
+                    # },
                     configured_params
                 ],
                 remappings=remappings
@@ -251,9 +251,9 @@ def generate_launch_description():
                 output='screen',
                 respawn_delay=2.0,
                 parameters=[
-                    {
-                        'use_sim_time': params['use_sim_time']
-                    },
+                    # {
+                    #     'use_sim_time': params['use_sim_time']
+                    # },
                     configured_params
                 ],
                 remappings=remappings
@@ -265,9 +265,9 @@ def generate_launch_description():
                 output='screen',
                 respawn_delay=2.0,
                 parameters=[
-                    {
-                        'use_sim_time': params['use_sim_time']
-                    },
+                    # {
+                    #     'use_sim_time': params['use_sim_time']
+                    # },
                     configured_params
                 ],
                 remappings=remappings
