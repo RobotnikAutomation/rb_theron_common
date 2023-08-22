@@ -82,6 +82,15 @@ def generate_launch_description():
     add_to_launcher.add_arg(arg)
 
     arg = ExtendedArgument(
+        name='topic_output_prefix',
+        description='Topic output prefix',
+        default_value='mergered_laser',
+        use_env=True,
+        environment='topic_output_prefix',
+    )
+    add_to_launcher.add_arg(arg)
+
+    arg = ExtendedArgument(
         name='angle_min',
         description='Minimum angle',
         default_value='-3.141592653589793',
@@ -151,9 +160,18 @@ def generate_launch_description():
             parameters=[
                 {
                     'use_sim_time': params['use_sim_time'],
-                    'destination_frame': [params['robot_id'], '/base_link'],
-                    'cloud_destination_topic': "laser/points",
-                    'scan_destination_topic': "laser/scan",
+                    'destination_frame': [
+                        params['robot_id'],
+                        '/base_link'
+                    ],
+                    'cloud_destination_topic': [
+                        params['topic_output_prefix'],
+                        '/points'
+                    ],
+                    'scan_destination_topic': [
+                        params['topic_output_prefix'],
+                        '/scan'
+                    ],
                     'laserscan_topics': params['laserscan_topics'],
                     'angle_min': params['angle_min'],
                     'angle_max': params['angle_max'],
