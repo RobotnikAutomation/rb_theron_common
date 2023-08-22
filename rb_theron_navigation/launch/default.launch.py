@@ -23,15 +23,20 @@
 # (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 # SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-import launch
-import launch_ros
 from ament_index_python.packages import get_package_share_directory
 from robotnik_common.launch import RewrittenYaml, add_launch_args
+
+from launch import LaunchDescription
+from launch.substitutions import LaunchConfiguration
+from launch.actions import SetEnvironmentVariable
+from launch.actions import GroupAction
+from launch_ros.actions import Node
+from launch_ros.actions import PushRosNamespace
 
 
 def generate_launch_description():
 
-    ld = launch.LaunchDescription()
+    ld = LaunchDescription()
     p = [
         (
             'use_sim_time',
@@ -46,7 +51,7 @@ def generate_launch_description():
         (
             'namespace',
             'Namespace of the nodes',
-            launch.substitutions.LaunchConfiguration('robot_id')
+            LaunchConfiguration('robot_id')
         ),
         (
             'nav_config_file',
@@ -116,17 +121,17 @@ def generate_launch_description():
         convert_types=True
     )
 
-    stdout_linebuf_envvar = launch.actions.SetEnvironmentVariable(
+    stdout_linebuf_envvar = SetEnvironmentVariable(
         'RCUTILS_LOGGING_BUFFERED_STREAM',
         '1'
     )
 
-    load_nodes = launch.actions.GroupAction(
+    load_nodes = GroupAction(
         actions=[
-            launch_ros.actions.PushRosNamespace(
+            PushRosNamespace(
                 namespace=params['namespace']
             ),
-            launch_ros.actions.Node(
+            Node(
                 package='nav2_controller',
                 executable='controller_server',
                 output='screen',
@@ -139,7 +144,7 @@ def generate_launch_description():
                 ],
                 remappings=remappings + [('cmd_vel', 'cmd_vel_nav')]
             ),
-            launch_ros.actions.Node(
+            Node(
                 package='nav2_smoother',
                 executable='smoother_server',
                 name='smoother_server',
@@ -153,7 +158,7 @@ def generate_launch_description():
                 ],
                 remappings=remappings
             ),
-            launch_ros.actions.Node(
+            Node(
                 package='nav2_planner',
                 executable='planner_server',
                 name='planner_server',
@@ -167,7 +172,7 @@ def generate_launch_description():
                 ],
                 remappings=remappings
             ),
-            launch_ros.actions.Node(
+            Node(
                 package='nav2_behaviors',
                 executable='behavior_server',
                 name='behavior_server',
@@ -187,7 +192,7 @@ def generate_launch_description():
                     )
                 ]
             ),
-            launch_ros.actions.Node(
+            Node(
                 package='nav2_bt_navigator',
                 executable='bt_navigator',
                 name='bt_navigator',
@@ -201,7 +206,7 @@ def generate_launch_description():
                 ],
                 remappings=remappings
             ),
-            launch_ros.actions.Node(
+            Node(
                 package='nav2_waypoint_follower',
                 executable='waypoint_follower',
                 name='waypoint_follower',
@@ -215,7 +220,7 @@ def generate_launch_description():
                 ],
                 remappings=remappings
             ),
-            launch_ros.actions.Node(
+            Node(
                 package='nav2_velocity_smoother',
                 executable='velocity_smoother',
                 name='velocity_smoother',
@@ -243,7 +248,7 @@ def generate_launch_description():
                     ),
                 ]
             ),
-            launch_ros.actions.Node(
+            Node(
                 package='nav2_lifecycle_manager',
                 executable='lifecycle_manager',
                 name='lifecycle_manager_navigation',
