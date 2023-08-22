@@ -29,55 +29,8 @@ import launch_ros
 from ament_index_python.packages import get_package_share_directory
 
 from robotnik_common.launch import RewrittenYaml
-
-
-def read_params(
-    ld: launch.LaunchDescription,
-    params: list[
-        tuple[
-            str,
-            str,
-            str
-        ]
-    ]
-):
-    # name, description, default_value
-
-    # Declare the launch options
-    ld.add_action(
-        launch.actions.DeclareLaunchArgument(
-            name='environment',
-            description='Read parameters from environment variables',
-            choices=['true', 'false'],
-            default_value='true',
-        )
-    )
-    for param in params:
-        ld.add_action(
-            launch.actions.DeclareLaunchArgument(
-                name=param[0],
-                description=param[1],
-                default_value=param[2],
-            )
-        )
-
-    # Get the launch configuration variables
-    ret = {}
-    if launch.substitutions.LaunchConfiguration('environment') == 'false':
-        for param in params:
-            ret[param[0]] = launch.substitutions.LaunchConfiguration(param[0])
-    else:
-        for param in params:
-            if str.upper(param[0]) in os.environ:
-                ret[param[0]] = launch.substitutions.EnvironmentVariable(
-                    str.upper(param[0])
-                )
-            else:
-                ret[param[0]] = launch.substitutions.LaunchConfiguration(
-                    param[0]
-                )
-
-    return ret
+from robotnik_common.launch import ExtendedArgument
+from robotnik_common.launch import AddArgumentParser
 
 # def read_params(ld : launch.LaunchDescription):
 #    environment = launch.substitutions.LaunchConfiguration('environment')
@@ -189,55 +142,86 @@ def read_params(
 
 def generate_launch_description():
 
-    ld = launch.LaunchDescription()
-    p = [
-        (
-            'use_sim_time',
-            'Use simulation/Gazebo clock',
-            'true'
-        ),
-        (
-            'robot_id',
-            'Frame id of the sensor',
-            'robot'
-        ),
-        (
-            'namespace',
-            'Namespace of the nodes',
-            launch.substitutions.LaunchConfiguration('robot_id')
-        ),
-        (
-            'map_name',
-            'Name of the map file',
-            'opil_factory'
-        ),
-        (
-            'map_file_abs',
-            'Absolute path to the map file',
-            [
-                get_package_share_directory('rb_theron_localization'),
-                '/maps/',
-                launch.substitutions.LaunchConfiguration('map_name'),
-                '/map.yaml'
-            ]
-        ),
-        (
-            'amcl_file',
-            'Absolute path to the amcl file',
-            [
-                get_package_share_directory('rb_theron_localization'),
-                '/config/amcl.yaml'
-            ]
-        ),
-        (
-            'map_frame_id',
-            'Frame id of the map',
-            [
-                'map'
-            ]
-        ),
+    ld = LaunchDescription()
+    add_to_launcher = AddArgumentParser(ld)
+
+    arg = ExtendedArgument(
+        name='use_sim_time',
+        description='Use simulation/Gazebo clock',
+        default_value='true',
+        use_env=True,
+        environment='use_sim_time',
+    )
+    add_to_launcher.add_arg(arg)
+
+    arg = ExtendedArgument(
+        name='robot_id',
+        description='Robot ID',
+        default_value='robot',
+        use_env=True,
+        environment='ROBOT_ID',
+    )
+    add_to_launcher.add_arg(arg)
+
+        arg = ExtendedArgument(
+        name='namespace',
+        description='Namespace of the nodes',
+        default_value=launch.substitutions.LaunchConfiguration('robot_id'),
+        use_env=True,
+        environment='NAMESPACE',
+    )
+    add_to_launcher.add_arg(arg)
+
+    arg = ExtendedArgument(
+        name='map_name',
+        description='Name of the map file',
+        default_value='opil_factory',
+        use_env=True,
+        environment='MAP_NAME',
+    )
+    add_to_launcher.add_arg(arg)
+
+    def_map_file_abs = [
+        get_package_share_directory('rb_theron_localization'),
+        '/maps/',
+        launch.substitutions.LaunchConfiguration('map_name'),
+        '/map.yaml'
     ]
-    params = read_params(ld, p)
+    arg = ExtendedArgument(
+        name='map_file_abs',
+        description='Absolute path to the map file',
+        default_value=def_map_file_abs,
+        use_env=True,
+        environment='MAP_FILE_ABS',
+    )
+    add_to_launcher.add_arg(arg)
+
+    def_amcl_file = [
+        get_package_share_directory('rb_theron_localization'),
+        '/maps/',
+        launch.substitutions.LaunchConfiguration('map_name'),
+        '/map.yaml'
+    ]
+    arg = ExtendedArgument(
+        name='amcl_file',
+        description='Absolute path to the amcl file',
+        default_value=def_amcl_file,
+        use_env=True,
+        environment='AMCL_FILE',
+    )
+    add_to_launcher.add_arg(arg)
+
+    arg = ExtendedArgument(
+        name='map_frame_id',
+        description='Frame id of the map',
+        default_value=[
+            'map'
+        ],
+        use_env=True,
+        environment='MAP_FRAME_ID',
+    )
+    add_to_launcher.add_arg(arg)
+    params = add_to_launcher.process_arg()
 
     lifecycle_nodes = ['map_server', 'amcl']
 
