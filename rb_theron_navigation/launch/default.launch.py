@@ -37,33 +37,52 @@ from launch_ros.actions import PushRosNamespace
 def generate_launch_description():
 
     ld = LaunchDescription()
-    p = [
-        (
-            'use_sim_time',
-            'Use simulation/Gazebo clock',
-            'true'
+    add_to_launcher = AddArgumentParser(ld)
+
+    arg = ExtendedArgument(
+        name='use_sim_time',
+        description='Use simulation/Gazebo clock',
+        default_value='true',
+        use_env=True,
+        environment='use_sim_time',
+    )
+    add_to_launcher.add_arg(arg)
+
+    arg = ExtendedArgument(
+        name='robot_id',
+        description='Robot ID',
+        default_value='robot',
+        use_env=True,
+        environment='ROBOT_ID',
+    )
+    add_to_launcher.add_arg(arg)
+
+    arg = ExtendedArgument(
+        name='namespace',
+        description='Namespace of the nodes',
+        default_value=LaunchConfiguration('robot_id'),
+        use_env=True,
+        environment='NAMESPACE',
+    )
+    add_to_launcher.add_arg(arg)
+
+    def_nav_file = [
+        get_package_share_directory(
+            'rb_theron_navigation'
         ),
-        (
-            'robot_id',
-            'Frame id of the sensor',
-            'robot'
-        ),
-        (
-            'namespace',
-            'Namespace of the nodes',
-            LaunchConfiguration('robot_id')
-        ),
-        (
-            'nav_config_file',
-            'Absolute path to the amcl file',
-            [
-                get_package_share_directory('rb_theron_navigation'),
-                '/config/nav.yaml',
-            ]
-        ),
+        '/config/nav.yaml',
     ]
 
-    params = add_launch_args(ld, p)
+    arg = ExtendedArgument(
+        name='nav_config_file',
+        description='Absolute path to the nav config file',
+        default_value=def_nav_file,
+        use_env=True,
+        environment='NAV_CONFIG_FILE',
+    )
+    add_to_launcher.add_arg(arg)
+
+    params = add_to_launcher.process_arg()
 
     lifecycle_nodes = [
         'controller_server',
@@ -190,7 +209,7 @@ def generate_launch_description():
                         'cmd_vel',
                         'cmd_vel_nav',
                     )
-                ]
+                ],
             ),
             Node(
                 package='nav2_bt_navigator',
