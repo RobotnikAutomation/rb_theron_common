@@ -23,91 +23,68 @@
 # (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 # SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-import os
-import launch
 from ament_index_python.packages import get_package_share_directory
 
 from os.path import join
 
 from launch import LaunchDescription
-# from launch.substitutions import LaunchConfiguration
+from launch.substitutions import LaunchConfiguration
 from launch_ros.actions import Node
-# from launch_ros.actions import PushRosNamespace
+from launch_ros.actions import PushRosNamespace
 
 from robotnik_common.launch import RewrittenYaml
-
-
-def read_params(
-    ld: LaunchDescription,
-    params: list[
-        tuple[
-            str,
-            str,
-            str
-        ]
-    ]
-):
-    # name, description, default_value
-
-    # Declare the launch options
-    ld.add_action(
-        launch.actions.DeclareLaunchArgument(
-            name='environment',
-            description='Read parameters from environment variables',
-            choices=['true', 'false'],
-            default_value='true',
-        )
-    )
-    for param in params:
-        ld.add_action(
-            launch.actions.DeclareLaunchArgument(
-                name=param[0],
-                description=param[1],
-                default_value=param[2],
-            )
-        )
-
-    # Get the launch configuration variables
-    ret = {}
-    if launch.substitutions.LaunchConfiguration('environment') == 'false':
-        for param in params:
-            ret[param[0]] = launch.substitutions.LaunchConfiguration(param[0])
-    else:
-        for param in params:
-            if str.upper(param[0]) in os.environ:
-                ret[param[0]] = launch.substitutions.EnvironmentVariable(
-                    str.upper(param[0])
-                )
-            else:
-                ret[param[0]] = launch.substitutions.LaunchConfiguration(
-                    param[0]
-                )
-
-    return ret
+from robotnik_common.launch import ExtendedArgument
+from robotnik_common.launch import AddArgumentParser
 
 
 def generate_launch_description():
     ld = LaunchDescription()
-    long_text = "Full path to the ROS2 parameters file to use "
-    long_text += "for the slam_toolbox node"
-    p = [
-        (
-            'use_sim_time', 'Use simulation/Gazebo clock', 'true'
-        ),
-        (
-            'robot_id', 'Name of the robot', 'robot'
-        ),
-        (
-            'slam_params_file',
-            long_text,
-            join(
-                get_package_share_directory("rb_theron_localization"),
-                "config",
-                "slam_params.yaml"
-            )
-        ),
-    ]
-    params = read_params(ld, p)
+    add_to_launcher = AddArgumentParser(ld)
+
+    arg = ExtendedArgument(
+        name='use_sim_time',
+        description='Use simulation/Gazebo clock',
+        default_value='true',
+        use_env=True,
+        environment='use_sim_time',
+    )
+    add_to_launcher.add_arg(arg)
+
+    arg = ExtendedArgument(
+        name='robot_id',
+        description='Robot ID',
+        default_value='robot',
+        use_env=True,
+        environment='ROBOT_ID',
+    )
+    add_to_launcher.add_arg(arg)
+
+    arg = ExtendedArgument(
+        name='namespace',
+        description='Namespace of the nodes',
+        default_value=LaunchConfiguration('robot_id'),
+        use_env=True,
+        environment='NAMESPACE',
+    )
+    add_to_launcher.add_arg(arg)
+
+    def_slam_param_desc = "Full path to the ROS2 parameters file to use "
+    def_slam_param_desc += "for the slam_toolbox node"
+    def_slam_param_file = join(
+        get_package_share_directory("rb_theron_localization"),
+        "config",
+        "slam_params.yaml"
+    )
+    arg = ExtendedArgument(
+        name='slam_params_file',
+        description=def_slam_param_desc,
+        default_value=def_slam_param_file,
+        use_env=True,
+        environment='SLAM_PARAMS_FILE',
+    )
+    add_to_launcher.add_arg(arg)
+
+    params = add_to_launcher.process_arg()
 
     config_file = RewrittenYaml(
         source_file=params['slam_params_file'],
@@ -118,18 +95,19 @@ def generate_launch_description():
             'map_frame': 'map',
             'scan_topic': [params['robot_id'], '/laser/scan']
         },
-        # root_key=[params['namespace']],
+        # root_key=[
+        #     params['namespace']
+        # ],
         # root_key=[''],
         convert_types=True,
     )
 
-    # ld.add_action(
-    #     PushRosNamespace(
-    #         namespace=params['namespace']
-    #     )
-    # )
+    ld.add_action(
+        PushRosNamespace(
+            namespace=params['namespace']
+        )
+    )
 
-# ld.add_action(launch_ros.actions.PushRosNamespace(namespace='robot'))
     ld.add_action(
         Node(
             package='slam_toolbox',
