@@ -69,6 +69,15 @@ def generate_launch_description():
     )
     add_to_launcher.add_arg(arg)
 
+    arg = ExtendedArgument(
+        name='map_frame_id',
+        description='Frame id of the map',
+        default_value='map',
+        use_env=True,
+        environment='MAP_FRAME_ID',
+    )
+    add_to_launcher.add_arg(arg)
+
     def_nav_file = [
         get_package_share_directory(
             'rb_theron_navigation'
@@ -98,23 +107,17 @@ def generate_launch_description():
     ]
 
     remappings = [
-        # (
-        #     [
-        #         '/',
-        #         params['namespace'],
-        #         '/map',
-        #     ],
-        #     '/map',
-        # ),
         (
             [
-                '/odom'
+                '/',
+                params['namespace'],
+                '/map',
             ],
             [
                 '/',
                 params['namespace'],
-                '/robotnik_base_control/odom',
-            ]
+                '/map',
+            ],
         ),
         (
             '/front_laser/scan',
@@ -138,7 +141,20 @@ def generate_launch_description():
         root_key=params['namespace'],
         param_rewrites={
             'use_sim_time': params['use_sim_time'],
-            'robot_base_frame': [params['robot_id'], '/base_footprint'],
+            'robot_base_frame': [
+                params['robot_id'],
+                '/base_footprint'
+            ],
+            'odom_topic': [
+                params['robot_id'],
+                '/robotnik_base_control/odom',
+            ],
+            'global_frame': [
+                params['robot_id'],
+                '/',
+                params['map_frame_id'],
+            ],
+
         },
         convert_types=True
     )
