@@ -26,8 +26,6 @@
 import os
 import launch
 import launch_ros
-from ament_index_python.packages import get_package_share_directory
-from robotnik_common.launch import RewrittenYaml
 
 
 def read_params(
