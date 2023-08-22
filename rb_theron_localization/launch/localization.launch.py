@@ -23,14 +23,17 @@
 # (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 # SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-import os
-import launch
-import launch_ros
 from ament_index_python.packages import get_package_share_directory
+
+from launch import LaunchDescription
+from launch.substitutions import LaunchConfiguration
+from launch_ros.actions import Node
+from launch_ros.actions import PushRosNamespace
 
 from robotnik_common.launch import RewrittenYaml
 from robotnik_common.launch import ExtendedArgument
 from robotnik_common.launch import AddArgumentParser
+
 
 def generate_launch_description():
 
@@ -55,10 +58,10 @@ def generate_launch_description():
     )
     add_to_launcher.add_arg(arg)
 
-        arg = ExtendedArgument(
+    arg = ExtendedArgument(
         name='namespace',
         description='Namespace of the nodes',
-        default_value=launch.substitutions.LaunchConfiguration('robot_id'),
+        default_value=LaunchConfiguration('robot_id'),
         use_env=True,
         environment='NAMESPACE',
     )
@@ -76,7 +79,7 @@ def generate_launch_description():
     def_map_file_abs = [
         get_package_share_directory('rb_theron_localization'),
         '/maps/',
-        launch.substitutions.LaunchConfiguration('map_name'),
+        LaunchConfiguration('map_name'),
         '/map.yaml'
     ]
     arg = ExtendedArgument(
@@ -91,7 +94,7 @@ def generate_launch_description():
     def_amcl_file = [
         get_package_share_directory('rb_theron_localization'),
         '/maps/',
-        launch.substitutions.LaunchConfiguration('map_name'),
+        LaunchConfiguration('map_name'),
         '/map.yaml'
     ]
     arg = ExtendedArgument(
@@ -130,7 +133,7 @@ def generate_launch_description():
         convert_types=True,
     )
 
-    map_server = launch_ros.actions.Node(
+    map_server = Node(
         package='nav2_map_server',
         executable='map_server',
         name='map_server',
@@ -145,7 +148,7 @@ def generate_launch_description():
         output='screen',
     )
 
-    amcl_node = launch_ros.actions.Node(
+    amcl_node = Node(
         package='nav2_amcl',
         executable='amcl',
         name='amcl',
@@ -164,7 +167,7 @@ def generate_launch_description():
         output='screen',
     )
 
-    lifecycle_manager = launch_ros.actions.Node(
+    lifecycle_manager = Node(
         package='nav2_lifecycle_manager',
         executable='lifecycle_manager',
         name='lifecycle_manager_localization',
@@ -179,7 +182,7 @@ def generate_launch_description():
     )
 
     ld.add_action(
-        launch_ros.actions.PushRosNamespace(
+        PushRosNamespace(
             namespace=params['namespace']
         )
     )
