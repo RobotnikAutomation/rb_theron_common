@@ -86,7 +86,7 @@ def generate_launch_description():
         description='Topic output prefix',
         default_value='mergered_laser',
         use_env=True,
-        environment='topic_output_prefix',
+        environment='TOPIC_OUTPUT_PREFIX',
     )
     add_to_launcher.add_arg(arg)
 
