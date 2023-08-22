@@ -23,47 +23,77 @@
 # (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 # SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-import launch
-import launch_ros
 from ament_index_python.packages import get_package_share_directory
-from robotnik_common.launch import add_launch_args
+
+from launch import LaunchDescription
+from launch.substitutions import LaunchConfiguration
+from launch_ros.actions import Node
+
+from robotnik_common.launch import ExtendedArgument
+from robotnik_common.launch import AddArgumentParser
 
 
 def generate_launch_description():
+    ld = LaunchDescription()
+    add_to_launcher = AddArgumentParser(ld)
 
-    ld = launch.LaunchDescription()
-    p = [
-        (
-            'use_sim_time', 'Use simulation/Gazebo clock', 'true'
-        ),
-        (
-            'namespace', 'Namespace of the nodes', ''
-        ),
-        (
-            'map_name', 'Name of the map file', 'willow_garage'
-        ),
-        (
-            'map_file_abs',
-            'Absolute path to the map file',
-            [
-                get_package_share_directory('rb_theron_localization'),
-                '/maps/',
-                launch.substitutions.LaunchConfiguration('map_name'),
-                '/map.yaml',
-            ]
-        ),
-        (
-            'map_frame_id',
-            'Frame id of the map',
-            [
-                'map'
-            ]
-        ),
+    arg = ExtendedArgument(
+        name='use_sim_time',
+        description='Use simulation/Gazebo clock',
+        default_value='true',
+        use_env=True,
+        environment='use_sim_time',
+    )
+    add_to_launcher.add_arg(arg)
+
+    arg = ExtendedArgument(
+        name='namespace',
+        description='Namespace of the nodes',
+        default_value=LaunchConfiguration('robot_id'),
+        use_env=True,
+        environment='NAMESPACE',
+    )
+    add_to_launcher.add_arg(arg)
+
+    arg = ExtendedArgument(
+        name='map_name',
+        description='Name of the map file',
+        default_value='opil_factory',
+        use_env=True,
+        environment='MAP_NAME',
+    )
+    add_to_launcher.add_arg(arg)
+
+    def_map_file_abs = [
+        get_package_share_directory('rb_theron_localization'),
+        '/maps/',
+        LaunchConfiguration('map_name'),
+        '/map.yaml'
     ]
-    params = add_launch_args(ld, p)
+    arg = ExtendedArgument(
+        name='map_file_abs',
+        description='Absolute path to the map file',
+        default_value=def_map_file_abs,
+        use_env=True,
+        environment='MAP_FILE_ABS',
+    )
+    add_to_launcher.add_arg(arg)
+
+    arg = ExtendedArgument(
+        name='map_frame_id',
+        description='Frame id of the map',
+        default_value=[
+            'map'
+        ],
+        use_env=True,
+        environment='MAP_FRAME_ID',
+    )
+    add_to_launcher.add_arg(arg)
+
+    params = add_to_launcher.process_arg()
 
     ld.add_action(
-        launch_ros.actions.Node(
+        Node(
             package='nav2_map_server',
             executable='map_server',
             name='map_server',
@@ -81,7 +111,7 @@ def generate_launch_description():
     )
 
     ld.add_action(
-        launch_ros.actions.Node(
+        Node(
             package='nav2_lifecycle_manager',
             executable='lifecycle_manager',
             name='lifecycle_manager_map_server',
