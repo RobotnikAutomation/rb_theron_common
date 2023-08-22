@@ -25,11 +25,15 @@
 
 import os
 import launch
-import launch_ros
+
+from launch import LaunchDescription
+from launch.substitutions import LaunchConfiguration
+from launch_ros.actions import Node
+from launch_ros.actions import PushRosNamespace
 
 
 def read_params(
-    ld: launch.LaunchDescription,
+    ld: LaunchDescription,
     params: list[
         tuple[
             str,
@@ -93,7 +97,8 @@ def generate_launch_description():
         ),
         (
             'namespace',
-            'Namespace', launch.substitutions.LaunchConfiguration('robot_id')
+            'Namespace',
+            LaunchConfiguration('robot_id'),
         ),
         (
             'base_frame',
@@ -139,12 +144,12 @@ def generate_launch_description():
     params = read_params(ld, p)
 
     ld.add_action(
-        launch_ros.actions.PushRosNamespace(
+        PushRosNamespace(
             namespace=params['namespace']
         )
     )
     ld.add_action(
-        launch_ros.actions.Node(
+        Node(
             package='ira_laser_tools',
             executable='laserscan_multi_merger',
             name='laserscan_merger',
