@@ -67,36 +67,21 @@ def generate_launch_description():
     )
     add_to_launcher.add_arg(arg)
 
+    default_map_name = 'opil_factory'
     arg = ExtendedArgument(
         name='map_name',
         description='Name of the map file',
-        default_value='opil_factory',
+        default_value=default_map_name,
         use_env=True,
         environment='MAP_NAME',
     )
     add_to_launcher.add_arg(arg)
 
-    def_map_file_abs = [
-        get_package_share_directory('rb_theron_localization'),
-        '/maps/',
-        LaunchConfiguration('map_name'),
-        '/map.yaml'
-    ]
-    arg = ExtendedArgument(
-        name='map_file_abs',
-        description='Absolute path to the map file',
-        default_value=def_map_file_abs,
-        use_env=True,
-        environment='MAP_FILE_ABS',
-    )
-    add_to_launcher.add_arg(arg)
-
     def_amcl_file = [
         get_package_share_directory('rb_theron_localization'),
-        '/maps/',
-        LaunchConfiguration('map_name'),
-        '/map.yaml'
+        '/config/amcl.yaml'
     ]
+
     arg = ExtendedArgument(
         name='amcl_file',
         description='Absolute path to the amcl file',
@@ -109,44 +94,41 @@ def generate_launch_description():
     arg = ExtendedArgument(
         name='map_frame_id',
         description='Frame id of the map',
-        default_value=[
-            'map'
-        ],
+        default_value='map',
         use_env=True,
         environment='MAP_FRAME_ID',
     )
     add_to_launcher.add_arg(arg)
+
+    arg = ExtendedArgument(
+        name='scan_topic',
+        description='2D laser scan topic to use',
+        default_value='mergered_laser/scan',
+        use_env=True,
+        environment='SCAN_TOPIC',
+    )
+    add_to_launcher.add_arg(arg)
     params = add_to_launcher.process_arg()
 
-    lifecycle_nodes = ['map_server', 'amcl']
+    lifecycle_nodes = ['amcl']
 
     amcl_rewritten = RewrittenYaml(
         source_file=params['amcl_file'],
         param_rewrites={
             'use_sim_time': params['use_sim_time'],
             'base_frame_id': [params['robot_id'], '/base_footprint'],
-            'global_frame_id': params['map_frame_id'],
+            'global_frame_id': [
+                params['robot_id'],
+                '/',
+                params['map_frame_id']
+            ],
             'odom_frame_id': [params['robot_id'], '/odom'],
-            'scan_topic': ['laser/scan'],
+            'scan_topic': params['scan_topic'],
         },
         root_key=[params['namespace']],
         convert_types=True,
     )
-
-    map_server = Node(
-        package='nav2_map_server',
-        executable='map_server',
-        name='map_server',
-        parameters=[
-            {
-                'use_sim_time': params['use_sim_time'],
-                'yaml_filename': params['map_file_abs'],
-                'topic_name': '/map',
-                'frame_id': params['map_frame_id'],
-            }
-        ],
-        output='screen',
-    )
+    print(amcl_rewritten)
 
     amcl_node = Node(
         package='nav2_amcl',
@@ -161,7 +143,9 @@ def generate_launch_description():
         remappings=[
             (
                 'map',
-                '/map'
+                [
+                    params['map_frame_id']
+                ],
             ),
         ],
         output='screen',
@@ -186,7 +170,6 @@ def generate_launch_description():
             namespace=params['namespace']
         )
     )
-    ld.add_action(map_server)
     ld.add_action(amcl_node)
     ld.add_action(lifecycle_manager)
 
