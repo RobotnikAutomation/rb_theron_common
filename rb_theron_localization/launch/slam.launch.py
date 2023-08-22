@@ -25,14 +25,20 @@
 
 import os
 import launch
-import launch_ros
 from ament_index_python.packages import get_package_share_directory
+
+from os.path import join
+
+from launch import LaunchDescription
+# from launch.substitutions import LaunchConfiguration
+from launch_ros.actions import Node
+# from launch_ros.actions import PushRosNamespace
 
 from robotnik_common.launch import RewrittenYaml
 
 
 def read_params(
-    ld: launch.LaunchDescription,
+    ld: LaunchDescription,
     params: list[
         tuple[
             str,
@@ -81,7 +87,7 @@ def read_params(
 
 
 def generate_launch_description():
-    ld = launch.LaunchDescription()
+    ld = LaunchDescription()
     long_text = "Full path to the ROS2 parameters file to use "
     long_text += "for the slam_toolbox node"
     p = [
@@ -94,7 +100,7 @@ def generate_launch_description():
         (
             'slam_params_file',
             long_text,
-            os.path.join(
+            join(
                 get_package_share_directory("rb_theron_localization"),
                 "config",
                 "slam_params.yaml"
@@ -117,9 +123,15 @@ def generate_launch_description():
         convert_types=True,
     )
 
+    # ld.add_action(
+    #     PushRosNamespace(
+    #         namespace=params['namespace']
+    #     )
+    # )
+
 # ld.add_action(launch_ros.actions.PushRosNamespace(namespace='robot'))
     ld.add_action(
-        launch_ros.actions.Node(
+        Node(
             package='slam_toolbox',
             executable='async_slam_toolbox_node',
             name='slam_toolbox',
@@ -129,4 +141,3 @@ def generate_launch_description():
     )
 
     return ld
-
