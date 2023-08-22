@@ -24,7 +24,7 @@
 # SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 from ament_index_python.packages import get_package_share_directory
-from robotnik_common.launch import RewrittenYaml, add_launch_args
+
 
 from launch import LaunchDescription
 from launch.substitutions import LaunchConfiguration
@@ -32,6 +32,9 @@ from launch.actions import SetEnvironmentVariable
 from launch.actions import GroupAction
 from launch_ros.actions import Node
 from launch_ros.actions import PushRosNamespace
+from robotnik_common.launch import RewrittenYaml
+from robotnik_common.launch import ExtendedArgument
+from robotnik_common.launch import AddArgumentParser
 
 
 def generate_launch_description():
@@ -95,14 +98,14 @@ def generate_launch_description():
     ]
 
     remappings = [
-        (
-            [
-                '/',
-                params['namespace'],
-                '/map',
-            ],
-            '/map',
-        ),
+        # (
+        #     [
+        #         '/',
+        #         params['namespace'],
+        #         '/map',
+        #     ],
+        #     '/map',
+        # ),
         (
             [
                 '/odom'
