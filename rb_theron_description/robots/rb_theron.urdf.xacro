@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<robot name="rb_theron" xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+  <xacro:arg name="revision" default="v1"/>
+  <xacro:arg name="namespace" default="robot"/>
+  <xacro:arg name="config_controllers" default="''"/>
+  <xacro:arg name="gpu" default="true"/>
+
+  <!-- Base -->
+  <xacro:include filename="$(find rb_theron_description)/robots/rb_theron_base.urdf.xacro" />
+  <xacro:rb_theron_base prefix="" hq="true" />
+
+  <!-- Base HW-->
+  <xacro:include filename="$(find rb_theron_description)/urdf/ros2_control.urdf.xacro"/>
+  <xacro:ros2_control namespace="$(arg namespace)" config_controllers="$(arg config_controllers)"/>
+
+  <!-- Sensors -->
+  <xacro:include filename="$(find robotnik_sensors)/urdf/all_sensors.urdf.xacro" />
+  <xacro:sensor_intel_d435 ns="$(arg namespace)" prefix="front_camera" parent="base_link" gpu="$(arg gpu)">
+    <origin xyz="0.3305 0.0 0.1748" rpy="0 0 0"/>
+  </xacro:sensor_intel_d435>
+  <xacro:sensor_intel_d435 ns="$(arg namespace)" prefix="rear_camera" parent="base_link" gpu="$(arg gpu)">
+    <origin xyz="-0.3305 0.0 0.1748" rpy="0 0 ${M_PI}"/>
+  </xacro:sensor_intel_d435>
+  <xacro:sensor_sick_tim571 ns="$(arg namespace)" prefix="front_laser" parent="base_link" gpu="$(arg gpu)">
+    <origin xyz="0.2675 -0.215 0.1613" rpy="0 -3.1416 2.3562"/>
+  </xacro:sensor_sick_tim571>
+  <xacro:sensor_sick_tim571 ns="$(arg namespace)" prefix="rear_laser" parent="base_link" gpu="$(arg gpu)">
+    <origin xyz="-0.2675 0.215 0.1613" rpy="0 -3.1416 -0.7854"/>
+  </xacro:sensor_sick_tim571>
+</robot>

@@ -1,6 +1,7 @@
 <?xml version="1.0"?>
 <robot name="theron_base" xmlns:xacro="http://www.ros.org/wiki/xacro">
-  <xacro:macro name="theron_base" params="publish_bf hq">
+  <xacro:macro name="theron_base" params="prefix publish_bf hq">
+    <xacro:include filename="$(find rb_theron_description)/urdf/utils/inertial.urdf.xacro" />
 
     <xacro:property name="PI" value="3.1415926535897931"/>
     <!-- xacro:property name="wheel_width" value="0.150" / -->
@@ -20,7 +21,7 @@
       <inertial>
         <mass value="45" />
         <origin xyz="0.0 0.0 0.0" />
-        <xacro:solid_cuboid_inertia m="45" w="0.3275" h="0.2775" d="0.1525" />
+        <xacro:solid_cuboid_inertia mass="45" width="0.3275" height="0.2775" depth="0.1525" />
       </inertial>
       <visual>
         <origin xyz="0 0 0" rpy="0 0 0" />

@@ -1,10 +1,10 @@
 <?xml version="1.0"?>
 <robot xmlns:xacro="http://wiki.ros.org/xacro">
-  <xacro:macro name="ros2_control">
+  <xacro:macro name="ros2_control" params="namespace:=robot config_controllers:=''">
       <gazebo>
         <plugin name="ros_control" filename="libgazebo_ros2_control.so">
-          <namespace>$(arg robot_id)</namespace>
-          <parameters>$(arg config_controllers)</parameters>
+          <namespace>${namespace}</namespace>
+          <parameters>${config_controllers}</parameters>
         </plugin>
       </gazebo>
       <ros2_control name="robotnik_base_hw" type="system">
