@@ -1,0 +1,56 @@
+<?xml version="1.0"?>
+<robot name="rb_theron"
+	xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+
+	<!-- ***************** -->
+	<!-- Imported elements -->
+	<!-- ***************** -->
+
+	<!-- First we import all posible elements defined in the urdf.xacro files. All these elements are defined as macro:xacros -->
+
+	<!-- Import differential base elements -->
+	<xacro:include filename="$(find rb_theron_description)/urdf/bases/theron_base_omni.urdf.xacro" />
+
+	<!-- Import wheels -->
+	<xacro:include filename="$(find rb_theron_description)/urdf/wheels/omni_wheel.urdf.xacro" />
+
+	<!-- Import Gazebo Stuff -->
+	<xacro:include filename="$(find rb_theron_description)/urdf/common.gazebo.xacro" />
+
+
+	<!-- ***************** -->
+	<!-- Global parameters -->
+	<!-- ***************** -->
+	<xacro:property name="PI" value="3.1415926535897931"/>
+
+	<!-- Wheel parameters -->
+	<xacro:property name="wheel_offset_x" value="0.2175" />
+	<xacro:property name="wheel_offset_y" value="0.204" />
+	<xacro:property name="wheel_offset_z" value="0.0" />
+
+	<!-- *************** -->
+	<!-- Robots Elements -->
+	<!-- *************** -->
+  <xacro:macro name="rb_theron_base" params="prefix hq">
+    <!-- rbogie base -->
+  	<xacro:theron_base prefix="${prefix}" publish_bf="true" hq="${hq}" />
+    <xacro:gazebo_colors prefix="${prefix}"/>
+
+  	<!-- WHEELS -->
+  	<xacro:omni_wheel prefix="${prefix}front_right" parent="${prefix}base_link" hq="${hq}">
+  		<origin xyz="${wheel_offset_x} ${-wheel_offset_y} ${wheel_offset_z}" rpy="0 0 0"/>
+  	</xacro:omni_wheel>
+  	<xacro:omni_wheel prefix="${prefix}front_left" parent="${prefix}base_link" hq="${hq}">
+  		<origin xyz="${wheel_offset_x} ${wheel_offset_y} ${wheel_offset_z}" rpy="${PI} 0 0"/>
+  	</xacro:omni_wheel>
+	  <xacro:omni_wheel prefix="${prefix}back_right" parent="${prefix}base_link" hq="${hq}">
+		<origin xyz="${-wheel_offset_x} ${-wheel_offset_y} ${wheel_offset_z}" rpy="0 0 0"/>
+	</xacro:omni_wheel>
+	<xacro:omni_wheel prefix="${prefix}back_left" parent="${prefix}base_link" hq="${hq}">
+		<origin xyz="${-wheel_offset_x} ${wheel_offset_y} ${wheel_offset_z}" rpy="${PI} 0 0"/>
+	</xacro:omni_wheel>
+  </xacro:macro>
+
+
+</robot>

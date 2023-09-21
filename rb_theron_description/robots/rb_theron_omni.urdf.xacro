@@ -1,0 +1,76 @@
+<?xml version="1.0"?>
+<robot name="rb_theron"
+	xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+
+	<!-- ***************** -->
+	<!-- Imported elements -->
+	<!-- ***************** -->
+
+	<!-- First we import all posible elements defined in the urdf.xacro files. All these elements are defined as macro:xacros -->
+
+	<!-- Import differential base elements -->
+	<xacro:include filename="$(find rb_theron_description)/robots/rb_theron_base_omni.urdf.xacro" />
+
+	<!-- Import wheels -->
+	<xacro:include filename="$(find rb_theron_description)/urdf/wheels/omni_wheel.urdf.xacro" />
+
+	<!-- Import all available sensors -->
+	<xacro:include filename="$(find robotnik_sensors)/urdf/all_sensors.urdf.xacro" />
+
+	<!-- Import Gazebo Stuff -->
+	<xacro:include filename="$(find rb_theron_description)/urdf/common.gazebo.xacro" />
+
+
+	<!-- ***************** -->
+	<!-- Global parameters -->
+	<!-- ***************** -->
+	<xacro:property name="PI" value="3.1415926535897931"/>
+
+	<!-- Wheel parameters -->
+	<!--xacro:property name="wheel_offset_x" value="0" />
+	<xacro:property name="wheel_offset_y" value="0.2516" />
+	<xacro:property name="wheel_offset_z" value="0.0" /-->
+
+	<!-- Flag to select the high or low quality model -->
+	<xacro:property name="hq" value="true" />
+
+	<!-- *************** -->
+	<!-- Robots Elements -->
+	<!-- *************** -->
+
+	<xacro:arg name="prefix" default="robot_"/>
+	<xacro:arg name="gpu" default="true"/>
+
+	<!-- Here we create the robot elements using the xacro:macros imported at the beggining of this file -->
+
+	<!-- base with wheels -->
+	<xacro:rb_theron_base prefix="$(arg prefix)" hq="${hq}" />
+
+	<!-- Gazebo ros control pluggins -->
+	<xacro:ros_control/>
+
+	<xacro:gazebo_colors prefix="$(arg prefix)"/>
+
+  <!-- SENSORS -->
+  <!-- TODO: Moved 0.01 in x, otherwise the camera is still inside the robot -->
+	<xacro:sensor_orbbec_astra prefix="$(arg prefix)front_rgbd_camera" parent="$(arg prefix)base_link" prefix_topic="front_rgbd_camera">
+		<origin xyz="0.3305 0.0 0.1748" rpy="0 0 0"/>
+	</xacro:sensor_orbbec_astra>
+
+	<xacro:sensor_imu_hector prefix="$(arg prefix)imu" parent="$(arg prefix)base_link">
+		<origin xyz="-0.1975 0.0 0.1598" rpy="0 0 0"/>
+	</xacro:sensor_imu_hector>
+
+	<!--xacro:sensor_sick_nanoscan3 prefix="$(arg prefix)front_laser" parent="$(arg prefix)base_link" prefix_topic="front_laser" min_angle="-2.0507619" max_angle="2.0507619">
+		<origin xyz="0.250 0.0 0.1643" rpy="0 3.1416 3.1416"/>
+	</xacro:sensor_sick_nanoscan3-->
+
+	<xacro:sensor_sick_tim571 prefix="$(arg prefix)front_laser" parent="$(arg prefix)base_link" prefix_topic="front_laser" min_angle="-2.0507619" max_angle="2.0507619" gpu="$(arg gpu)">
+		<origin xyz="0.2675 -0.215 0.1613" rpy="0 -3.1416 2.3562"/>
+	</xacro:sensor_sick_tim571>
+	<xacro:sensor_sick_tim571 prefix="$(arg prefix)rear_laser" parent="$(arg prefix)base_link" prefix_topic="rear_laser" min_angle="-2.0507619" max_angle="2.0507619" gpu="$(arg gpu)">
+		<origin xyz="-0.2675 0.215 0.1613" rpy="0 -3.1416 -0.7854"/>
+	</xacro:sensor_sick_tim571>
+
+</robot>
