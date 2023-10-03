@@ -21,7 +21,7 @@
   <xacro:property name="hq" value="true" />
 
   <xacro:arg name="prefix" default="robot_"/>
-  <xacro:arg name="ros_planar_move_plugin" default="false"/>
+  <xacro:arg name="ros_planar_move_plugin" default="true"/>
   <xacro:arg name="load_kinematics_file" default="false"/> <!-- Necesarry for ur_description compatible with official ur drivers-->
   <xacro:arg name="use_gpu_for_simulation" default="false"/>
 

@@ -83,7 +83,7 @@
     <child link="${prefix}base_chapa" />
   </joint-->
 
-  <!-- LOGO ROBOTNIK IZQUIERDO -->
+  <!-- LOGO ROBOTNIK IZQUIERDO >
   <link name="${prefix}base_logo_left">
   <visual>
     <origin xyz="0 0 0" rpy="0 0 0" />
@@ -100,9 +100,9 @@
     <origin xyz="0.0 0.28931 0.29062" rpy="0 0 0" />
     <parent link="${prefix}base_link"/>
     <child link="${prefix}base_logo_left" />
-  </joint>
+  </joint-->
 
-  <!-- LOGO ROBOTNIK DERECHO -->
+  <!-- LOGO ROBOTNIK DERECHO >
   <link name="${prefix}base_logo_right">
   <visual>
     <origin xyz="0 0 0" rpy="0 0 0" />
@@ -119,9 +119,9 @@
     <origin xyz="0.0 -0.28931 0.29062" rpy="0 0 ${PI}" />
     <parent link="${prefix}base_link"/>
     <child link="${prefix}base_logo_right" />
-  </joint>
+  </joint-->
 
-  <!-- LOGO ROBOTNIK FRONTAL -->
+  <!-- LOGO ROBOTNIK FRONTAL >
   <link name="${prefix}base_logo_front">
   <visual>
     <origin xyz="0 0 0" rpy="0 0 0" />
@@ -138,9 +138,9 @@
     <origin xyz="0.345 0.0 0.0" rpy="0 0 ${-PI/2}" />
     <parent link="${prefix}base_link"/>
     <child link="${prefix}base_logo_front" />
-  </joint>
+  </joint-->
 
-  <!-- LOGO ROBOTNIK TRASERO -->
+  <!-- LOGO ROBOTNIK TRASERO >
   <link name="${prefix}base_logo_rear">
   <visual>
     <origin xyz="0 0 0" rpy="0 0 0" />
@@ -157,7 +157,7 @@
     <origin xyz="-0.345 0.0 0.0" rpy="0 0 ${PI/2}" />
     <parent link="${prefix}base_link"/>
     <child link="${prefix}base_logo_rear" />
-  </joint>
+  </joint-->
 
    <!-- DOCKING CONTACT -->
 
