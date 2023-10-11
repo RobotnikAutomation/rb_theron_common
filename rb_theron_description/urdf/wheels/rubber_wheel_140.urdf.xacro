@@ -18,7 +18,7 @@
 		<inertia ixx="${m*(3*r*r+h*h)/12}" ixy = "0" ixz = "0" iyy="${m*(3*r*r+h*h)/12}" iyz = "0" izz="${m*r*r/2}" />
 	</xacro:macro>
 
-	<xacro:macro name="rubber_wheel" params="prefix parent *origin hq">
+	<xacro:macro name="rubber_wheel" params="prefix parent reflect *origin hq">
 
 		<!--WHEEL TIRE -->
 		<joint name="${prefix}_wheel_joint" type="continuous">
@@ -34,16 +34,28 @@
 			<visual>
 				<!-- HIGH RESOLUTION WHEELS -->
 				<!-- LOW RESOLUTION WHEELS -->
-				<origin xyz="0 0 0" rpy="${M_PI/2} 0 0" />
+				<xacro:unless value="${reflect}">
+					<origin xyz="0 0 0" rpy="${M_PI} 0 ${M_PI/2}" />
+				</xacro:unless>
+				<xacro:if value="${reflect}">
+					<origin xyz="0 0 0" rpy="${M_PI} 0 ${-M_PI/2}" />
+				</xacro:if>
+				
 				<geometry>
-					<cylinder length="${wheel_height}" radius="${wheel_radius}" />
+					<!-- <cylinder length="${wheel_height}" radius="${wheel_radius}" /> -->
+					<mesh filename="package://rb_theron_description/meshes/wheels/rubber_wheel_zltech.stl" />
 				</geometry>
 			</visual>
 
 			<collision>
-				<origin xyz="0 0 0" rpy="${M_PI/2} 0 0" />
+				<xacro:unless value="${reflect}">
+					<origin xyz="0 0 0" rpy="${M_PI} 0 ${M_PI/2}" />
+				</xacro:unless>
+				<xacro:if value="${reflect}">
+					<origin xyz="0 0 0" rpy="${M_PI} 0 ${-M_PI/2}" />
+				</xacro:if>
 				<geometry>
-					<cylinder length="${wheel_height}" radius="${wheel_radius}" />
+					<mesh filename="package://rb_theron_description/meshes/wheels/rubber_wheel_zltech.stl" />
 				</geometry>
 			</collision>
 			<inertial>
@@ -53,7 +65,7 @@
 			</inertial>
 		</link>
 
-		<joint name="${prefix}_wheel_tire_joint" type="fixed">
+		<!-- <joint name="${prefix}_wheel_tire_joint" type="fixed">
 			<parent link="${prefix}_wheel_link"/>
 			<child link="${prefix}_wheel_tire_link"/>
 			<origin xyz="0 0 0" rpy="0 0 0" />
@@ -66,7 +78,7 @@
 					<cylinder length="${wheel_height + 0.001}" radius="${wheel_radius * 0.92}" />
 				</geometry>
 			</visual>
-		</link>
+		</link> -->
 
 
 		<xacro:rubber_wheel_transmission prefix="${prefix}" />
