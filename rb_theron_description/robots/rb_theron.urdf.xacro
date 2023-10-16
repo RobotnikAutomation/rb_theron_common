@@ -15,9 +15,6 @@
 	<!-- Import wheels -->
 	<xacro:include filename="$(find rb_theron_description)/urdf/wheels/rubber_wheel_150.urdf.xacro" />
 
-	<!-- Import casters -->
-	<xacro:include filename="$(find rb_theron_description)/urdf/wheels/castor.urdf.xacro" />
-
 	<!-- Import all available sensors -->
 	<xacro:include filename="$(find robotnik_sensors)/urdf/all_sensors.urdf.xacro" />
 
@@ -44,11 +41,12 @@
 
 	<xacro:arg name="prefix" default="robot_"/>
 	<xacro:arg name="gpu" default="true"/>
+	<xacro:arg name="use_sim" default="false"/>
 
 	<!-- Here we create the robot elements using the xacro:macros imported at the beggining of this file -->
 
 	<!-- base with wheels -->
-	<xacro:rb_theron_base prefix="$(arg prefix)" hq="${hq}" />
+	<xacro:rb_theron_base prefix="$(arg prefix)" hq="${hq}" use_sim="$(arg use_sim)"/>
 
 	<!-- Gazebo ros control pluggins -->
 	<xacro:ros_control/>

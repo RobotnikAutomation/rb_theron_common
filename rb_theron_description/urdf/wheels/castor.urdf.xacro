@@ -23,19 +23,31 @@
               izz="${m*r*r/2}" />
   </xacro:macro>
 
-  <xacro:macro name="caster" params="prefix parent *origin hq">
+  <xacro:macro name="caster" params="prefix parent *origin hq use_sim">
 
   <!--CASTER SUPPORT -->
-  <joint name="${prefix}joint_support" type="fixed">
+  <xacro:if value="${use_sim}">
+    <joint name="${prefix}joint_support" type="continuous">
       <parent link="${parent}"/>
       <child link="${prefix}_support"/>
       <xacro:insert_block name="origin" />
       <axis xyz="0 0 1" rpy="0 ${M_PI} 0" />
-      <!-- <limit effort="100" velocity="100"/> -->
+      <limit effort="100" velocity="100"/>
       <!-- joint_properties damping="1.5" friction="1.5"/ -->
       <dynamics damping="0" friction="0.01"/>
     </joint>
-
+  </xacro:if>
+  <xacro:unless value="${use_sim}">
+    <joint name="${prefix}joint_support" type="fixed">
+        <parent link="${parent}"/>
+        <child link="${prefix}_support"/>
+        <xacro:insert_block name="origin" />
+        <axis xyz="0 0 1" rpy="0 ${M_PI} 0" />
+        <!-- <limit effort="100" velocity="100"/> -->
+        <!-- joint_properties damping="1.5" friction="1.5"/ -->
+        <dynamics damping="0" friction="0.01"/>
+      </joint>
+  </xacro:unless>
     <link name="${prefix}_support">
       <visual>
         <origin xyz="0 0 0" rpy="0 0 0" />
@@ -59,12 +71,23 @@
 
   <!--CASTER WHEEL -->
   <!-- xacro:caster_wheel prefix="${prefix}" parent="${prefix}_support" hq="${hq}" -->
-  <xacro:caster_wheel prefix="${prefix}" parent="${prefix}_support" hq="${hq}">
+  <xacro:caster_wheel prefix="${prefix}" parent="${prefix}_support" hq="${hq}" use_sim="$(arg use_sim)">
 		<origin xyz="${caster_wheel_offset_x} ${caster_wheel_offset_y} ${caster_wheel_offset_z}" rpy="0 0 0"/>
    </xacro:caster_wheel>
  </xacro:macro>
 
- <xacro:macro name="caster_wheel" params="prefix parent *origin hq">
+ <xacro:macro name="caster_wheel" params="prefix parent *origin hq use_sim">
+  <xacro:if value="${use_sim}">
+    <joint name="${prefix}joint_wheel" type="continuous">
+      <parent link="${parent}"/>
+      <child link="${prefix}_wheel"/>
+      <insert_block name="origin" />
+      <axis xyz="0 1 0" rpy="0 0 0" />
+      <limit effort="100" velocity="100"/>
+      <joint_properties damping="0.1" friction="0.1"/>
+   </joint>
+  </xacro:if>
+  <xacro:unless value="${use_sim}">
      <joint name="${prefix}joint_wheel" type="fixed">
        <parent link="${parent}"/>
        <child link="${prefix}_wheel"/>
@@ -73,7 +96,7 @@
        <!-- <limit effort="100" velocity="100"/> -->
        <joint_properties damping="0.1" friction="0.1"/>
     </joint>
-
+  </xacro:unless>
     <link name="${prefix}_wheel">
       <visual>
         <!-- HIGH RESOLUTION WHEELS -->
@@ -113,7 +136,8 @@
       </inertial>
     </link>
 
-  <!-- Transmission is important to link the joints and the controller
+  <!-- Transmission is important to link the joints and the controller-->
+  <xacro:if value="${use_sim}">
     <transmission name="${prefix}_support_joint_trans">
       <type>transmission_interface/SimpleTransmission</type>
       <joint name="${prefix}joint_support">
@@ -135,7 +159,7 @@
 		<motorTorqueConstant>1</motorTorqueConstant>
       </actuator>
     </transmission>
-  -->
+  </xacro:if>
     <gazebo reference="${prefix}_support">
 			<mu1 value="5.0"/>
 			<mu2 value="0.5"/>
