@@ -2,6 +2,7 @@
 <launch>
   <arg name="id_robot" default="robot"/>
   <arg name="prefix" default="$(arg id_robot)_"/>
+  <arg name="odom_model_type" default="diff"/>
 
   <!-- Topics argumments -->
   <arg name="cmd_vel_topic" default="move_base/cmd_vel"/>
@@ -23,6 +24,7 @@
 
   <include file="$(find rb_theron_navigation)/launch/move_base_$(arg local_planner).launch">
     <arg name="id_robot" value="$(arg id_robot)"/>
+    <arg name="odom_model_type" value="$(arg odom_model_type)"/>
 
     <!-- Topics argumments -->
     <arg name="cmd_vel_topic" value="$(arg cmd_vel_topic)"/>

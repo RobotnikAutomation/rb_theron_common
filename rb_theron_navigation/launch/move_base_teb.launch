@@ -2,6 +2,7 @@
 <launch>
   <arg name="id_robot" default="robot"/>
   <arg name="prefix" default="$(arg id_robot)_"/>
+  <arg name="odom_model_type" default="diff"/>
 
   <!-- Topics argumments -->
   <arg name="cmd_vel_topic" default="move_base/cmd_vel"/>
@@ -47,7 +48,7 @@
     <param name="global_costmap/static_map/map_topic" value="$(arg map_topic)"/>
 
     <!-- Load local_planner parameters -->
-    <rosparam file="$(find rb_theron_navigation)/config/teb_local_planner_params.yaml" command="load" />
+    <rosparam file="$(find rb_theron_navigation)/config/teb_local_planner_params_$(arg odom_model_type).yaml" command="load" />
     <param name="TebLocalPlannerROS/map_frame" value="$(arg global_frame)"/>
     <param name="TebLocalPlannerROS/odom_topic" value="$(arg odom_topic)"/>
 
