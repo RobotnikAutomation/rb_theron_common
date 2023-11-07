@@ -10,7 +10,7 @@
 	<!-- First we import all posible elements defined in the urdf.xacro files. All these elements are defined as macro:xacros -->
 
 	<!-- Import differential base elements -->
-	<xacro:include filename="$(find rb_theron_description)/urdf/bases/theron_base.urdf.xacro" />
+	<xacro:include filename="$(find rb_theron_description)/urdf/bases/rb_theron_base_v4.urdf.xacro" />
 
 	<!-- Import wheels -->
 	<xacro:include filename="$(find rb_theron_description)/urdf/wheels/rubber_wheel_150.urdf.xacro" />
@@ -36,8 +36,8 @@
 	<!-- Robots Elements -->
 	<!-- *************** -->
   <xacro:macro name="rb_theron_base" params="prefix hq use_sim">
-    <!-- rbogie base -->
-  	<xacro:theron_base prefix="${prefix}" publish_bf="true" hq="${hq}" />
+    <!-- rb_theron base -->
+  	<xacro:rb_theron_base_v4 prefix="${prefix}" publish_bf="true" hq="${hq}" />
     <xacro:gazebo_colors prefix="${prefix}"/>
 
   	<!-- WHEELS -->

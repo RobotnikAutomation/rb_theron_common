@@ -8,8 +8,8 @@
 
   <!-- First we import all posible elements defined in the urdf.xacro files. All these elements are defined as macro:xacros -->
 
-  <!-- Import rb_theron_omni base elements -->
-  <xacro:include filename="$(find rb_theron_description)/urdf/bases/rb_theron_omni_base.urdf.xacro" />
+  <!-- Import rb_theron_v4 base elements -->
+  <xacro:include filename="$(find rb_theron_description)/urdf/bases/rb_theron_base_v4.urdf.xacro" />
 
   <!-- Import rb_theron_omni wheels -->
   <xacro:include filename="$(find rb_theron_description)/urdf/wheels/omni_wheel.urdf.xacro" />
@@ -76,8 +76,8 @@
 
     <!-- Here we create the robot elements using the xacro:macros imported at the beggining of this file -->
 
- 	<!-- rb_theron_omni base -->
-   <xacro:rb_theron_omni_base prefix="$(arg prefix)" publish_bf="true" hq="${hq}" />
+ 	<!-- rb_theron_v4 base -->
+   <xacro:rb_theron_base_v4 prefix="$(arg prefix)" publish_bf="true" hq="${hq}" />
 
    <xacro:omni_wheel prefix="$(arg prefix)front_right" parent="$(arg prefix)base_link" reflect="false" hq="${hq}">
      <origin xyz="${wheel_offset_x} -${wheel_offset_y} ${wheel_offset_z}" rpy="0 0 0"/>

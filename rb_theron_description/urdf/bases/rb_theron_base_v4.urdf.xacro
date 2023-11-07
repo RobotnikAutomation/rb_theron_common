@@ -1,10 +1,10 @@
 <?xml version="1.0"?>
-<robot name="rb_theron_omni" xmlns:xacro="http://wiki.ros.org/xacro">
+<robot name="rb_theron_v4" xmlns:xacro="http://wiki.ros.org/xacro">
 
 
   <xacro:include filename="$(find rb_theron_description)/urdf/bases/base.gazebo.xacro" />
 
-  <xacro:macro name="rb_theron_v4_base" params="prefix publish_bf hq">
+  <xacro:macro name="rb_theron_base_v4" params="prefix publish_bf hq">
 
   <!-- Robot mechanical and motor parameters -->
   <xacro:property name="PI" value="3.1415926535897931"/>
