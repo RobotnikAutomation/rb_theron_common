@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<package>
+  <name>rb_theron_navigation_private</name>
+  <version>0.0.0</version>
+  <description>
+    This package configures the robotnik_navigation private packages
+  </description>
+
+  <author>Robotnik Automation S.L.</author>
+  <maintainer email="ggari@robotnik.es">Guillem Gari</maintainer>
+
+  <license>BSD 3-clause</license>
+
+
+  <buildtool_depend>catkin</buildtool_depend>
+
+  <run_depend>robotnik_docker</run_depend>
+  <run_depend>robotnik_move</run_depend>
+  <run_depend>robotnik_safety_controller</run_depend>
+
+</package>

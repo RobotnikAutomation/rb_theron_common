@@ -21,20 +21,6 @@
     <arg name="id_robot" value="$(arg id_robot)"/>
   </include>
 
-  <include file="$(find rb_theron_navigation)/launch/scan_filter.launch">
-    <arg name="node_name" value="front_laser_scan_filter_shadow"/>
-    <arg name="input_scan" value="front_laser/scan_raw"/>
-    <arg name="output_scan" value="front_laser/scan"/>
-    <arg name="config_file" value="scan_filter_shadow.yaml"/>
-  </include>
-
-  <include file="$(find rb_theron_navigation)/launch/scan_filter.launch">
-    <arg name="node_name" value="front_laser_scan_filter"/>
-    <arg name="input_scan" value="front_laser/scan"/>
-    <arg name="output_scan" value="front_laser/filtered_scan"/>
-    <arg name="config_file" value="scan_filter.yaml"/>
-  </include>
-
   </group>
 
 </launch>
