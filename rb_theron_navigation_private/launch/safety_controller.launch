@@ -1,0 +1,38 @@
+<?xml version="1.0"?>
+<launch>
+
+  <arg name="id_robot" default="$(optenv ROBOT_ID robot)"/>
+  <arg name="prefix" default="$(arg id_robot)_"/>
+
+  <arg name="base_frame" default="$(arg prefix)base_footprint"/>
+  <arg name="has_safety_controller" default="false"/>
+  <arg name="cmd_vel_topic" default="move/cmd_vel"/>
+
+    <node
+      if="$(arg has_safety_controller)"
+      pkg="robotnik_safety_controller"
+      type="robotnik_safety_controller"
+      name="robotnik_safety_controller"
+    >
+        <!-- robot footprint -->
+        <param name="base_frame" value="$(arg prefix)base_footprint" />
+        <param name="robot_x_size" value="0.6" />
+        <param name="robot_y_size" value="0.6" />
+        <!-- we want the robot to stop if it encounters an obstacle in front of it, instead of avoiding it -->
+        <param name="min_x" value="-2.5" />
+        <param name="max_x" value="0.3" />
+        <param name="min_y" value="-0.35" />
+        <param name="max_y" value="0.35" />
+        <!-- so we put the same are for warning, and warning speed of 0 -->
+        <param name="warning_min_x" value="-2" />
+        <param name="warning_max_x" value="0.3" />
+        <param name="warning_min_y" value="-0.35" />
+        <param name="warning_max_y" value="0.35" />
+        <param name="max_warning_speed" value="0.0" />
+
+        <remap from="cmd_vel_in" to="$(arg cmd_vel_topic)_unsafe"/>
+        <remap from="cmd_vel_out" to="$(arg cmd_vel_topic)"/>
+    </node>
+
+
+</launch>
