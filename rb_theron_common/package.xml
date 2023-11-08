@@ -15,8 +15,6 @@
   <run_depend>rb_theron_localization</run_depend>
   <run_depend>rb_theron_navigation</run_depend>
   <run_depend>rb_theron_pad</run_depend>
-  <run_depend>rb_theron_perception</run_depend>
-  <run_depend>rb_theron_robot_local_control</run_depend>
 
   <export><metapackage/></export>
 

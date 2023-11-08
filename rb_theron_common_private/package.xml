@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<package>
+  <name>rb_theron_common_private</name>
+  <version>0.0.0</version>
+  <description>The rb_theron_common_private package. It contains rb_theron common packages with private dependencies used for robot control and for simulation</description>
+
+  <maintainer email="ggari@robotnik.es">Guillem Gari</maintainer>
+
+  <license>BSD</license>
+
+  <buildtool_depend>catkin</buildtool_depend>
+  <run_depend>rb_theron_control</run_depend>
+
+  <run_depend>rb_theron_description</run_depend>
+  <run_depend>rb_theron_localization</run_depend>
+  <run_depend>rb_theron_navigation</run_depend>
+  <run_depend>rb_theron_navigation_private</run_depend>
+  <run_depend>rb_theron_pad</run_depend>
+  <run_depend>rb_theron_perception</run_depend>
+  <run_depend>rb_theron_robot_local_control</run_depend>
+
+  <export><metapackage/></export>
+
+</package>
