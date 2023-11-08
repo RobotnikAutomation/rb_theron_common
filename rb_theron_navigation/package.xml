@@ -21,9 +21,6 @@
 
   <run_depend>move_base</run_depend>
   <run_depend>pointcloud_to_laserscan</run_depend>
-  <run_depend>robotnik_docker</run_depend>
-  <run_depend>robotnik_move</run_depend>
-  <run_depend>robotnik_safety_controller</run_depend>
   <run_depend>spatio_temporal_voxel_layer</run_depend>
   <run_depend>teb_local_planner</run_depend>
   <run_depend>global_planner</run_depend>
