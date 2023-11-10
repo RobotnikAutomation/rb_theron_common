@@ -10,3 +10,7 @@ catkin_package(
 #  CATKIN_DEPENDS urdf xacro
 )
 
+install(
+  DIRECTORY launch robots rviz urdf meshes
+        DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
+)
