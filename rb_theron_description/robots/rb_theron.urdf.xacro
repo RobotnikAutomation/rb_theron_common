@@ -49,7 +49,7 @@
 	<xacro:rb_theron_base prefix="$(arg prefix)" hq="${hq}" use_sim="$(arg use_sim)"/>
 
 	<!-- Gazebo ros control pluggins -->
-	<xacro:ros_control/>
+	<xacro:ros_control namespace="$(arg namespace)"/>
 
 	<xacro:gazebo_colors prefix="$(arg prefix)"/>
 
