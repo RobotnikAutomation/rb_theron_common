@@ -7,6 +7,7 @@
 	<arg name="prefix" default="robot_"/>
 	<arg name="wheel_diameter" default="0.1524"/>
 	<arg name="ros_planar_move_plugin" default="false"/>
+	<arg name="kinematics" default="$(optenv ROBOT_KINEMATICS diff_2w)"/>
 
 	<!-- Robot - Load joint controller configurations from YAML file to parameter server -->
 	<group unless="$(arg sim)">
