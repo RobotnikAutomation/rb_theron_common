@@ -6,7 +6,7 @@
 	<arg name="id_robot" default="robot"/>
 	<arg name="prefix" default="robot_"/>
 	<arg name="wheel_diameter" default="0.1524"/>
-	<arg name="use_ros_planar_move_plugin" default="false"/>
+	<arg name="ros_planar_move_plugin" default="false"/>
 
 	<!-- Robot - Load joint controller configurations from YAML file to parameter server -->
 	<group unless="$(arg sim)">
@@ -37,12 +37,12 @@
 		<param name="robotnik_base_control/odom_frame_id" value="$(arg prefix)odom"/>
 
 		<!-- load the controllers -->
-		<node if="$(arg use_ros_planar_move_plugin)" name="controller_spawner" pkg="controller_manager" type="spawner" respawn="false" output="screen" args="
+		<node if="$(arg ros_planar_move_plugin)" name="controller_spawner" pkg="controller_manager" type="spawner" respawn="false" output="screen" args="
   						  joint_read_state_controller
   						  ">
 		</node>
 
-		<node unless="$(arg use_ros_planar_move_plugin)" name="controller_spawner" pkg="controller_manager" type="spawner" respawn="false" output="screen" args="
+		<node unless="$(arg ros_planar_move_plugin)" name="controller_spawner" pkg="controller_manager" type="spawner" respawn="false" output="screen" args="
   						  robotnik_base_control
   						  joint_read_state_controller
   						  ">
