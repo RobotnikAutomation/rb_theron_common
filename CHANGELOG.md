@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## [0.1.0] 2024-01-29
+
 ### Added
 - Added use of ExtendedArgument and AddArgumentParser in `rb_theron_localization` launch files.
 - Added use of ExtendedArgument and AddArgumentParser in `rb_theron_navigation` launch files.
