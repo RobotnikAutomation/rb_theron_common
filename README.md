@@ -1,4 +1,4 @@
-# rb_theron_common (with RB-THERON ROS 1 Noetic)
+# RB-THERON Common Packages
 The `rb_theron_common` repository contains common packages for the control and simulation of the RB-THERON robot, such as the URDF description of the RB-THERON, platform messages and other files for simulation.
 
 
