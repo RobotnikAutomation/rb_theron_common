@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<robot name="rbkairos" xmlns:xacro="http://wiki.ros.org/xacro">
+<robot name="rb_theron" xmlns:xacro="http://wiki.ros.org/xacro">
 
 
   <!-- ***************** -->
