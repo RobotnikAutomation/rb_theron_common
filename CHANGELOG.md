@@ -2,6 +2,21 @@
 
 ## Unreleased
 
+### Added
+- Added in the `rb_theron_control.launch` launch file located at `rb_theron_control/launch/` some params to fix the problem with wheel movement. 
+- The following params for left and right wheels has been added with the proper value in close_loop and the proper values for the PID of the joints:
+    - `<param name="gazebo_ros_control/pid_gains/robot_1_right_wheel_joint/close_loop" value="position"/>`
+    - `<param name="gazebo_ros_control/pid_gains/robot_1_right_wheel_joint/p" value="1000.0"/>`
+    - `<param name="gazebo_ros_control/pid_gains/robot_1_right_wheel_joint/i" value="0.05"/>`
+    - `<param name="gazebo_ros_control/pid_gains/robot_1_right_wheel_joint/d" value="0.01"/>`
+    - `<param name="gazebo_ros_control/pid_gains/robot_1_left_wheel_joint/close_loop" value="position"/>`
+    - `<param name="gazebo_ros_control/pid_gains/robot_1_left_wheel_joint/p" value="1000.0"/>`
+    - `<param name="gazebo_ros_control/pid_gains/robot_1_left_wheel_joint/i" value="0.05"/>`
+    - `<param name="gazebo_ros_control/pid_gains/robot_1_left_wheel_joint/d" value="0.01"/>`
+- Added in the `castor.urdf.xacro` located at `rb_theron_description/urdf/wheels` the configuration required in the joints config.
+- Added in the `rubber_wheel.urdf.xacro` located at `rb_theron_description/urdf/wheels` the configuration required in the joints config.
+
+
 ## [0.1.0] 2024-01-29
 
 ### Added
