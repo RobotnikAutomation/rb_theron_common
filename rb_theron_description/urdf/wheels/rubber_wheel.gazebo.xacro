@@ -42,6 +42,14 @@
 		<gazebo reference="${prefix}_wheel_tire_link">
 			<material>Gazebo/Gray</material>
 			<turnGravityOff>false</turnGravityOff>
+			<mu1>0.85</mu1>
+			<mu2>0.85</mu2>
+			<kp>1.0e12</kp>
+			<kd>1.0e3</kd>
+			<fdir1>0 0 1</fdir1>
+			<material>Gazebo/Yellow</material>
+			<turnGravityOff>false</turnGravityOff>
+			<minDepth>0.001</minDepth>
 		</gazebo>
 
 		<!--gazebo reference="${name}_wheel_link">

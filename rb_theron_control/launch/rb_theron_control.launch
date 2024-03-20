@@ -36,6 +36,15 @@
 		<param name="robotnik_base_control/base_frame_id" value="$(arg prefix)base_footprint"/>
 		<param name="robotnik_base_control/odom_frame_id" value="$(arg prefix)odom"/>
 
+		<param name="gazebo_ros_control/pid_gains/robot_1_right_wheel_joint/close_loop" value="position"/>
+		<param name="gazebo_ros_control/pid_gains/robot_1_right_wheel_joint/p" value="1000.0"/>
+		<param name="gazebo_ros_control/pid_gains/robot_1_right_wheel_joint/i" value="0.05"/>
+		<param name="gazebo_ros_control/pid_gains/robot_1_right_wheel_joint/d" value="0.01"/>
+		<param name="gazebo_ros_control/pid_gains/robot_1_left_wheel_joint/close_loop" value="position"/>
+		<param name="gazebo_ros_control/pid_gains/robot_1_left_wheel_joint/p" value="1000.0"/>
+		<param name="gazebo_ros_control/pid_gains/robot_1_left_wheel_joint/i" value="0.05"/>
+		<param name="gazebo_ros_control/pid_gains/robot_1_left_wheel_joint/d" value="0.01"/>
+
 		<!-- load the controllers -->
 		<node if="$(arg use_ros_planar_move_plugin)" name="controller_spawner" pkg="controller_manager" type="spawner" respawn="false" output="screen" args="
   						  joint_read_state_controller
