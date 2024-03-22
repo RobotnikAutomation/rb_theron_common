@@ -31,10 +31,8 @@
       <parent link="${parent}"/>
       <child link="${prefix}_support"/>
       <xacro:insert_block name="origin" />
-      <axis xyz="0 0 1" rpy="0 ${M_PI} 0" />
-      <limit effort="100" velocity="100"/>
-      <!-- joint_properties damping="1.5" friction="1.5"/ -->
-      <dynamics damping="0" friction="0.01"/>
+      <axis xyz="0 0 1" />
+      <dynamics damping="0.01" friction="0.1"/>
     </joint>
   </xacro:if>
   <xacro:unless value="${use_sim}">
@@ -56,12 +54,6 @@
           </geometry>
       </visual>
 
-      <collision>
-        <origin xyz="0 0 0" rpy="0 0 0" />
-          <geometry>
-	       <mesh filename="package://rb_theron_description/meshes/wheels/castor_wheel.dae" />
-          </geometry>
-      </collision>
       <inertial>
         <mass value="${caster_support_mass}" />
         <origin xyz="0 0 0" />
@@ -69,22 +61,21 @@
       </inertial>
     </link>
 
-  <!--CASTER WHEEL -->
-  <!-- xacro:caster_wheel prefix="${prefix}" parent="${prefix}_support" hq="${hq}" -->
-  <xacro:caster_wheel prefix="${prefix}" parent="${prefix}_support" hq="${hq}" use_sim="$(arg use_sim)">
-		<origin xyz="${caster_wheel_offset_x} ${caster_wheel_offset_y} ${caster_wheel_offset_z}" rpy="0 0 0"/>
-   </xacro:caster_wheel>
- </xacro:macro>
+    <!--CASTER WHEEL -->
+    <!-- xacro:caster_wheel prefix="${prefix}" parent="${prefix}_support" hq="${hq}" -->
+    <xacro:caster_wheel prefix="${prefix}" parent="${prefix}_support" hq="${hq}" use_sim="$(arg use_sim)">
+      <origin xyz="-0.023 ${caster_wheel_offset_y} -0.071" rpy="0 0 0" />
+    </xacro:caster_wheel>
+  </xacro:macro>
 
  <xacro:macro name="caster_wheel" params="prefix parent *origin hq use_sim">
   <xacro:if value="${use_sim}">
     <joint name="${prefix}joint_wheel" type="continuous">
       <parent link="${parent}"/>
       <child link="${prefix}_wheel"/>
-      <insert_block name="origin" />
-      <axis xyz="0 1 0" rpy="0 0 0" />
-      <limit effort="100" velocity="100"/>
-      <joint_properties damping="0.1" friction="0.1"/>
+      <origin xyz="-0.033 ${caster_wheel_offset_y} -0.071" rpy="0 0 0" />
+      <axis xyz="0 1 0"/>
+      <joint_properties damping="0.01" friction="0.1"/>
    </joint>
   </xacro:if>
   <xacro:unless value="${use_sim}">
@@ -92,43 +83,18 @@
        <parent link="${parent}"/>
        <child link="${prefix}_wheel"/>
        <insert_block name="origin" />
-       <axis xyz="0 1 0" rpy="0 0 0" />
+       <axis xyz="0 0 1" rpy="0 0 0" />
        <!-- <limit effort="100" velocity="100"/> -->
        <joint_properties damping="0.1" friction="0.1"/>
     </joint>
   </xacro:unless>
     <link name="${prefix}_wheel">
-      <visual>
-        <!-- HIGH RESOLUTION WHEELS -->
-     <!-- xacro:if value="${hq}">
-          <origin xyz="0 0 0" rpy="0 0 0" />
-          <geometry>
-		<mesh filename="package://rb_theron_description/meshes/wheels/mcq_prototype_castor_wheel.dae" />
-          </geometry>
-        </xacro:if -->
-       <!-- LOW RESOLUTION WHEELS -->
-       <!-- xacro:unless value="${hq}" -->
-          <origin xyz="0 0 0" rpy="0 0 0" />
-          <geometry>
-            <cylinder length="${caster_height}" radius="${caster_radius}" />
-            <!-- sphere radius="${caster_radius}"/ -->
-          </geometry>
-        <!-- /xacro:unless -->
-      </visual>
-
-     <collision>
-	  <origin xyz="0 0 0" rpy="${M_PI/2} 0 0" />
-	  <!-- origin xyz="0 0 0" rpy="0 0 0" / -->
+      <collision>
+        <origin xyz="0 0 0" rpy="${M_PI/2} 0 0" />
         <geometry>
-		  <!-- mesh filename="package://rb_theron_description/meshes/wheels/mcq_prototype_castor_wheel.dae" / -->
-          <cylinder length="${caster_height}" radius="${caster_radius}" />
-          <!-- sphere radius="${caster_radius}"/ -->
+          <cylinder radius="${caster_radius}" length="${caster_height}"/>
         </geometry>
-		<surface>
-          <bounce restitution_coefficient = "1"/>
-		</surface>
       </collision>
-
       <inertial>
         <mass value="${caster_mass}" />
         <origin xyz="0 0 0" />
